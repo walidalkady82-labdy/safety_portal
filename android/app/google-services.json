@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "653844014276",
+    "firebase_url": "https://database-a1f2a-default-rtdb.firebaseio.com",
+    "project_id": "database-a1f2a",
+    "storage_bucket": "database-a1f2a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653844014276:android:a6392a35b9697770185591",
+        "android_client_info": {
+          "package_name": "com.example.safety_portal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "653844014276-q3qqnnj9lipof2pk1m1shd9ha9u2083h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpZAy-vUBEnmoATH_-i-hrARd0RTEj3Ao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "653844014276-20qm5i02v3rsgkt11rdodrd4puqqmmid.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
