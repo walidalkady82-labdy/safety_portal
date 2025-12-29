@@ -470,9 +470,9 @@ class _TaskListPageState extends State<TaskListPage> {
                    (task.value['ReporterName']?.toString().toLowerCase().contains(widget.userEmail.split('@')[0].toLowerCase()) ?? false) ||
                    widget.userEmail.isNotEmpty; 
 
-    final statusController = TextEditingController(text: task.value['status']);
-    final dueDateController = TextEditingController(text: task.value['dueDate'] ?? "");
-    final feedbackController = TextEditingController(text: task.value['ownerFeedBack'] ?? "");
+    final statusController = TextEditingController(text: task.value['status']?.toString());
+    final dueDateController = TextEditingController(text: task.value['dueDate']?.toString() ?? "");
+    final feedbackController = TextEditingController(text: task.value['ownerFeedBack']?.toString() ?? "");
 
     showDialog(
       context: context,
@@ -734,7 +734,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
             final existingVec = List<double>.from(entry['vector'].map((e) => e.toDouble()));
             final score = ServiceAI().duplicateDetector.calculateSimilarity(_currentVector!, existingVec);
             if (score > 0.88) { // 88% similarity threshold
-              duplicateMatch = entry['observationOrIssueOrHazard'];
+              duplicateMatch = entry['observationOrIssueOrHazard']?.toString();
               break;
             }
           }
@@ -773,7 +773,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
           const SizedBox(height: 20),
 
           // Area Selection
-          DropdownButtonFormField(
+          DropdownButtonFormField<String>(
             value: selectedArea,
             items: _areas.map((a) => DropdownMenuItem(value: a, child: Text(a))).toList(),
             onChanged: (v) => setState(() => selectedArea = v),
@@ -832,14 +832,14 @@ class _AddIssuePageState extends State<AddIssuePage> {
 
           // Classification Results
           Row(children: [
-            Expanded(child: DropdownButtonFormField(value: selectedType, items: ServiceAI().classifier.typeLabels.map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(), onChanged: (v) => setState(() => selectedType = v), decoration: const InputDecoration(labelText: "Type"))),
+            Expanded(child: DropdownButtonFormField<String>(value: selectedType, items: ServiceAI().classifier.typeLabels.map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(), onChanged: (v) => setState(() => selectedType = v), decoration: const InputDecoration(labelText: "Type"))),
             const SizedBox(width: 10),
-            Expanded(child: DropdownButtonFormField(value: selectedLevel, items: ServiceAI().classifier.levelLabels.map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(), onChanged: (v) => setState(() => selectedLevel = v), decoration: const InputDecoration(labelText: "Level"))),
+            Expanded(child: DropdownButtonFormField<String>(value: selectedLevel, items: ServiceAI().classifier.levelLabels.map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(), onChanged: (v) => setState(() => selectedLevel = v), decoration: const InputDecoration(labelText: "Level"))),
           ]),
           const SizedBox(height: 12),
-          DropdownButtonFormField(value: selectedHazardKind, isExpanded: true, items: ServiceAI().classifier.hazardLabels.map((l) => DropdownMenuItem(value: l, child: Text(l, style: const TextStyle(fontSize: 12)))).toList(), onChanged: (v) => setState(() => selectedHazardKind = v), decoration: const InputDecoration(labelText: "Hazard Kind")),
+          DropdownButtonFormField<String>(value: selectedHazardKind, isExpanded: true, items: ServiceAI().classifier.hazardLabels.map((l) => DropdownMenuItem(value: l, child: Text(l, style: const TextStyle(fontSize: 12)))).toList(), onChanged: (v) => setState(() => selectedHazardKind = v), decoration: const InputDecoration(labelText: "Hazard Kind")),
           const SizedBox(height: 12),
-          DropdownButtonFormField(value: selectedElectricalKind, items: ServiceAI().classifier.elecLabels.map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(), onChanged: (v) => setState(() => selectedElectricalKind = v), decoration: const InputDecoration(labelText: "Electrical Kind")),
+          DropdownButtonFormField<String>(value: selectedElectricalKind, items: ServiceAI().classifier.elecLabels.map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(), onChanged: (v) => setState(() => selectedElectricalKind = v), decoration: const InputDecoration(labelText: "Electrical Kind")),
 
           const SizedBox(height: 20),
           const Divider(),
@@ -847,7 +847,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
           const SizedBox(height: 12),
 
           // Dept Selection
-          DropdownButtonFormField(
+          DropdownButtonFormField<String>(
             value: selectedDept,
             items: _depts.map((d) => DropdownMenuItem(value: d, child: Text(d))).toList(),
             onChanged: (v) => setState(() { selectedDept = v; assignedTo = null; }),
@@ -856,7 +856,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
           const SizedBox(height: 12),
 
           // Person Selection (Filtered)
-          DropdownButtonFormField(
+          DropdownButtonFormField<String>(
             value: assignedTo,
             items: globalUsers.where((u) => u.department == selectedDept).map((u) => DropdownMenuItem(value: u.nameEn, child: Text(u.nameEn))).toList(),
             onChanged: selectedDept == null ? null : (v) => setState(() => assignedTo = v),
