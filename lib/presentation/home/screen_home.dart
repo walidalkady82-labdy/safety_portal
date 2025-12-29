@@ -684,256 +684,222 @@ class _AddIssuePageState extends State<AddIssuePage> {
   final _oc = TextEditingController(); // Observation
   final _ac = TextEditingController(); // Action
   
-  // Classification Fields
-  String? selectedArea; 
+  // Selection States
+  String? selectedArea;
   String? selectedType;
+  String? selectedLevel;
   String? selectedHazardKind;
   String? selectedElectricalKind;
-  String? selectedLevel;
-
-  // Responsibility Fields
-  String? selectedRespDept;
+  String? selectedDept;
   String? assignedTo;
-  List<ModelUserData> _filteredExecutors = [];
-  List<String> _departments = [];
 
-  // Photo Logic
-  final ImagePicker _picker = ImagePicker();
-  Uint8List? _imageBytes; // For displaying image on both Web & Mobile
-  bool _isUploading = false;
-
-  // AI Logic
+  // AI & Duplicate States
   Timer? _debounce;
-  bool _isClassifying = false;
-  bool _isGeminiLoading = false;
-  late final ServiceAI service_ai;
+  bool _isAILoading = false;
+  String? _duplicateFound;
+  List<double>? _currentVector;
 
-  // Full Area List
-  final List<String> _areas = [
-    "Admin Building", "Ammonia tank", "Bypass", "CCR Building", "Cement mills", 
-    "Clay crusher", "Clinic&Ambulance", "Coal mill", "Coal storage", "Containers", 
-    "Cooler", "DSS", "Daily mazzot tank", "Diesel Generator", "Electric stations", 
-    "Electrical Tunnel", "Electrical workshop", "External quarries", "Fuel station", 
-    "Gypsum crusher", "Isolation Room", "Labs", "Lime stone crusher", "Main mazzot tank", 
-    "Mechanical workshop", "Medical Admin", "Mobile Equp.", "Mosque", "Other", 
-    "Packing", "Palamatic", "Pre blending area", "Preheater/Kiln", "Quarry", "RDF", 
-    "Raw mill", "Safety shower", "Samares Workshop", "Silos", "Site", "Technical Building", 
-    "Used oil tanks", "Utilities", "Warehouse", "Water Stations", "co2 tank", 
-    "emergency room", "fire fighting equipment"
-  ]..sort();
+  // Photo State
+  Uint8List? _imageBytes;
+  final ImagePicker _picker = ImagePicker();
 
-  @override
-  void initState() {
-    super.initState();
-    _initModel();
-    _loadDepartments();
-  }
-
-  Future<void> _initModel() async {
-    await service_ai.initAllModels();
-    if (mounted) setState(() {}); 
-  }
-
-  void _loadDepartments() {
-    // Extract unique departments from globalUsers list
-    final depts = globalUsers.map((u) => u.department).where((d) => d.isNotEmpty).toSet().toList()..sort();
-    setState(() {
-      _departments = depts.isNotEmpty ? depts : ["Electrical", "Mechanical", "Safety", "Production"];
-    });
-  }
-
-  void _filterExecutors(String? dept) {
-    if (dept == null) {
-      setState(() => _filteredExecutors = []);
-      return;
-    }
-    setState(() {
-      _filteredExecutors = globalUsers.where((u) => u.department == dept).toList();
-      assignedTo = null; 
-    });
-  }
-
-  Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.camera, maxWidth: 800);
-    if (image != null) {
-      final bytes = await image.readAsBytes();
-      setState(() => _imageBytes = bytes);
-    }
-  }
-
-  Future<void> _aiAction() async {
-    if (_oc.text.isEmpty) return;
-    setState(() => _isGeminiLoading = true);
-    try {
-      final res = await http.post(
-        Uri.parse("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=$geminiApiKey"),
-        body: jsonEncode({"contents": [{"parts": [{"text": "As a safety expert, suggest 3 corrective actions in Arabic for: ${_oc.text}."}]}]})
-      );
-      if (res.statusCode == 200) _ac.text = jsonDecode(res.body)['candidates'][0]['content']['parts'][0]['text'];
-    } finally { setState(() => _isGeminiLoading = false); }
-  }
+  final List<String> _areas = ["Area 1", "Workshop", "CCR", "Quarry", "Other"]..sort();
+  final List<String> _depts = ["Electrical", "Mechanical", "Safety", "Production"];
 
   void _onObservationChanged(String text) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 800), () async {
-      if (text.trim().length < 3) return;
-      setState(() => _isClassifying = true);
-      final result = await service_ai.classifier.predict(text);
-      if (mounted && result.isNotEmpty) {
+    _debounce = Timer(const Duration(milliseconds: 1000), () async {
+      if (text.trim().length < 5) return;
+      
+      setState(() => _isAILoading = true);
+      
+      // 1. Run Unified AI Service
+      final result = await ServiceAI().analyzeFull(text);
+      final prediction = result['classification'] as Map<String, String>;
+      _currentVector = result['embedding'] as List<double>;
+
+      // 2. Check for Duplicates in Firebase (Same Area, Last 50 items)
+      String? duplicateMatch;
+      final snap = await FirebaseDatabase.instance
+          .ref('atr')
+          .orderByChild('area')
+          .equalTo(selectedArea)
+          .limitToLast(50)
+          .get();
+
+      if (snap.exists) {
+        final data = snap.value as Map<dynamic, dynamic>;
+        for (var entry in data.values) {
+          if (entry['vector'] != null) {
+            final existingVec = List<double>.from(entry['vector'].map((e) => e.toDouble()));
+            final score = ServiceAI().duplicateDetector.calculateSimilarity(_currentVector!, existingVec);
+            if (score > 0.88) { // 88% similarity threshold
+              duplicateMatch = entry['observationOrIssueOrHazard'];
+              break;
+            }
+          }
+        }
+      }
+
+      if (mounted) {
         setState(() {
-          if (service_ai.classifier.typeLabels.contains(result['type'])) selectedType = result['type'];
-          if (service_ai.classifier.hazardLabels.contains(result['hazard_kind'])) selectedHazardKind = result['hazard_kind'];
-          if (service_ai.classifier.elecLabels.contains(result['electrical_kind'])) selectedElectricalKind = result['electrical_kind'];
-          if (service_ai.classifier.levelLabels.contains(result['level'])) selectedLevel = result['level'];
-          _isClassifying = false;
+          selectedType = prediction['type'];
+          selectedLevel = prediction['level'];
+          selectedHazardKind = prediction['hazard_kind'];
+          selectedElectricalKind = prediction['electrical_kind'];
+          _duplicateFound = duplicateMatch;
+          _isAILoading = false;
         });
       }
     });
   }
 
+  Future<void> _pickImage() async {
+    final XFile? photo = await _picker.pickImage(source: ImageSource.camera, maxWidth: 800);
+    if (photo != null) {
+      final bytes = await photo.readAsBytes();
+      setState(() => _imageBytes = bytes);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (!service_ai.classifier.isLoaded) return const Center(child: CircularProgressIndicator());
-
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(20), 
+      padding: const EdgeInsets.all(20),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, 
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // --- 1. LOCATION & PHOTO ---
-          const SectionLabel(text: "Location & Evidence | الموقع والصورة" ),
+          const Text("Report New Issue | تسجيل بلاغ جديد", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
+          const SizedBox(height: 20),
+
+          // Area Selection
           DropdownButtonFormField(
-            value: selectedArea, 
-            items: _areas.map((x) => DropdownMenuItem(value: x, child: Text(x, style: const TextStyle(fontSize: 13)))).toList(), 
-            onChanged: (v) => setState(() => selectedArea = v), 
-            decoration: const InputDecoration(labelText: "Area / Location | المنطقة"),
-            isExpanded: true,
+            value: selectedArea,
+            items: _areas.map((a) => DropdownMenuItem(value: a, child: Text(a))).toList(),
+            onChanged: (v) => setState(() => selectedArea = v),
+            decoration: const InputDecoration(labelText: "Area | المنطقة"),
           ),
           const SizedBox(height: 12),
-          
+
+          // Observation Field
+          TextField(
+            controller: _oc,
+            maxLines: 3,
+            onChanged: _onObservationChanged,
+            decoration: InputDecoration(
+              labelText: "Observation | الملاحظة *",
+              suffixIcon: _isAILoading ? const Padding(padding: EdgeInsets.all(12), child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))) : null,
+            ),
+          ),
+
+          // Duplicate Warning
+          if (_duplicateFound != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: Colors.orange.shade50, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.orange)),
+                child: Row(
+                  children: [
+                    const Icon(Icons.warning_amber_rounded, color: Colors.orange),
+                    const SizedBox(width: 10),
+                    Expanded(child: Text("Similar report exists: '$_duplicateFound'", style: const TextStyle(fontSize: 12, color: Colors.orange))),
+                  ],
+                ),
+              ),
+            ),
+
+          const SizedBox(height: 12),
+
+          // Photo Evidence
           GestureDetector(
             onTap: _pickImage,
             child: Container(
-              height: 120,
+              height: 150,
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.grey.shade300, style: BorderStyle.solid),
-                image: _imageBytes != null 
-                  ? DecorationImage(image: MemoryImage(_imageBytes!), fit: BoxFit.cover)
-                  : null
               ),
               child: _imageBytes == null 
-                ? Column(mainAxisAlignment: MainAxisAlignment.center, children: const [Icon(Icons.camera_alt, color: Colors.grey, size: 40), SizedBox(height: 5), Text("Tap to take photo | صورة", style: TextStyle(color: Colors.grey))])
-                : Align(alignment: Alignment.topRight, child: IconButton(icon: const Icon(Icons.close, color: Colors.red), onPressed: () => setState(() => _imageBytes = null))),
+                ? const Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.camera_alt, color: Colors.grey), Text("Tap to take photo | التقاط صورة")])
+                : Image.memory(_imageBytes!, fit: BoxFit.cover),
             ),
           ),
 
-          // --- 2. DETAILS & AI ---
-          const SizedBox(height: 20),
-          const SectionLabel(text: "Observation | الملاحظة"),
-          TextField(
-            controller: _oc, 
-            maxLines: 3, 
-            decoration: InputDecoration(
-              labelText: "Describe Hazard | وصف الخطر *", 
-              suffixIcon: _isClassifying ? const Padding(padding: EdgeInsets.all(12), child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))) : null
-            ), 
-            onChanged: _onObservationChanged 
-          ),
-          
           const SizedBox(height: 12),
 
-          // --- 3. CLASSIFICATION (AUTO-FILLED) ---
+          // Classification Results
           Row(children: [
-            Expanded(child: DropdownButtonFormField(value: selectedType, items: service_ai.classifier.typeLabels.map((t) => DropdownMenuItem(value: t, child: Text(t, style: const TextStyle(fontSize: 12)))).toList(), onChanged: (v) => setState(() => selectedType = v), decoration: const InputDecoration(labelText: "Type"))),
+            Expanded(child: DropdownButtonFormField(value: selectedType, items: ServiceAI().classifier.typeLabels.map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(), onChanged: (v) => setState(() => selectedType = v), decoration: const InputDecoration(labelText: "Type"))),
             const SizedBox(width: 10),
-            Expanded(child: DropdownButtonFormField(value: selectedLevel, items: service_ai.classifier.levelLabels.map((l) => DropdownMenuItem(value: l, child: Text(l, style: const TextStyle(fontSize: 12)))).toList(), onChanged: (v) => setState(() => selectedLevel = v), decoration: const InputDecoration(labelText: "Level"))),
+            Expanded(child: DropdownButtonFormField(value: selectedLevel, items: ServiceAI().classifier.levelLabels.map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(), onChanged: (v) => setState(() => selectedLevel = v), decoration: const InputDecoration(labelText: "Level"))),
           ]),
           const SizedBox(height: 12),
-          Row(children: [
-            Expanded(child: DropdownButtonFormField(value: selectedHazardKind, isExpanded: true, items: service_ai.classifier.hazardLabels.map((h) => DropdownMenuItem(value: h, child: Text(h, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11)))).toList(), onChanged: (v) => setState(() => selectedHazardKind = v), decoration: const InputDecoration(labelText: "Hazard Class"))),
-            const SizedBox(width: 10),
-            Expanded(child: DropdownButtonFormField(value: selectedElectricalKind, items: service_ai.classifier.elecLabels.map((e) => DropdownMenuItem(value: e, child: Text(e, style: const TextStyle(fontSize: 12)))).toList(), onChanged: (v) => setState(() => selectedElectricalKind = v), decoration: const InputDecoration(labelText: "Elec Kind"))),
-          ]),
+          DropdownButtonFormField(value: selectedHazardKind, isExpanded: true, items: ServiceAI().classifier.hazardLabels.map((l) => DropdownMenuItem(value: l, child: Text(l, style: const TextStyle(fontSize: 12)))).toList(), onChanged: (v) => setState(() => selectedHazardKind = v), decoration: const InputDecoration(labelText: "Hazard Kind")),
+          const SizedBox(height: 12),
+          DropdownButtonFormField(value: selectedElectricalKind, items: ServiceAI().classifier.elecLabels.map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(), onChanged: (v) => setState(() => selectedElectricalKind = v), decoration: const InputDecoration(labelText: "Electrical Kind")),
 
-          // --- 4. ACTION ---
           const SizedBox(height: 20),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-             const SectionLabel(text: "Action | الإجراء" ),
-             TextButton.icon(onPressed: _isGeminiLoading ? null : _aiAction, icon: const Icon(Icons.auto_awesome, size: 16), label: const Text("AI Suggest"))
-          ]),
-          TextField(controller: _ac, maxLines: 2, decoration: const InputDecoration(labelText: "Corrective Action | الإجراء التصحيحي")),
+          const Divider(),
+          const Text("Responsibility | المسؤولية", style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
 
-          // --- 5. RESPONSIBILITY ---
-          const SizedBox(height: 20),
-          const SectionLabel(text: "Responsibility | المسؤولية" ),
+          // Dept Selection
           DropdownButtonFormField(
-            value: selectedRespDept, 
-            items: _departments.map((d) => DropdownMenuItem(value: d, child: Text(d))).toList(), 
-            onChanged: (v) { setState(() => selectedRespDept = v); _filterExecutors(v); }, 
-            decoration: const InputDecoration(labelText: "Department | القسم")
+            value: selectedDept,
+            items: _depts.map((d) => DropdownMenuItem(value: d, child: Text(d))).toList(),
+            onChanged: (v) => setState(() { selectedDept = v; assignedTo = null; }),
+            decoration: const InputDecoration(labelText: "Resp. Dept | القسم المسؤول"),
           ),
           const SizedBox(height: 12),
+
+          // Person Selection (Filtered)
           DropdownButtonFormField(
-            value: assignedTo, 
-            items: _filteredExecutors.map((u) => DropdownMenuItem(value: u.nameEn, child: Text("${u.nameEn} ${u.nameAr.isNotEmpty ? '(${u.nameAr})' : ''}", overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12)))).toList(), 
-            onChanged: _filteredExecutors.isEmpty ? null : (v) => setState(() => assignedTo = v.toString()), 
+            value: assignedTo,
+            items: globalUsers.where((u) => u.department == selectedDept).map((u) => DropdownMenuItem(value: u.nameEn, child: Text(u.nameEn))).toList(),
+            onChanged: selectedDept == null ? null : (v) => setState(() => assignedTo = v),
             decoration: const InputDecoration(labelText: "Assign To | إسناد إلى"),
-            hint: _filteredExecutors.isEmpty && selectedRespDept != null ? const Text("No users found") : null,
+            hint: const Text("Select Department first"),
           ),
 
-          // --- SUBMIT ---
           const SizedBox(height: 30),
-          SizedBox(width: double.infinity, height: 50, child: ElevatedButton(
-            onPressed: () async {
-              if(_oc.text.isEmpty) {
-                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please enter an observation"), backgroundColor: Colors.red));
-                 return;
-              }
-              
-              setState(() => _isUploading = true);
-              
-              // Simulate Photo Upload (since no Firebase Storage configured)
-              String photoUrl = "";
-              if (_imageBytes != null) {
-                // In real app: Upload _imageBytes to Firebase Storage -> Get URL
-                photoUrl = "https://placeholder.com/uploaded_image.jpg"; 
-              }
 
-              final ref = FirebaseDatabase.instance.ref('atr').push();
-              await ref.set({
-                'area': selectedArea ?? "Other", 
-                'observationOrIssueOrHazard': _oc.text, 
-                'actionOrCorrectiveAction': _ac.text,
-                'status': 'Pending', 
-                'issueDate': DateTime.now().toIso8601String(), 
-                'type': selectedType ?? "Unsafe_Condition",
-                'hazard_kind': selectedHazardKind ?? "General",
-                'electrical_kind': selectedElectricalKind ?? "Other",
-                'level': selectedLevel ?? "Low",
-                'respDepartment': selectedRespDept ?? "Safety",
-                'depPersonExecuter': assignedTo ?? "Unassigned",
-                'photo': photoUrl,
-                'ReporterName': FirebaseAuth.instance.currentUser?.email ?? "Guest"
-              });
-              
-              _oc.clear(); _ac.clear();
-              setState(() { 
-                selectedType = null; selectedHazardKind = null; selectedElectricalKind = null; selectedLevel = null;
-                assignedTo = null; selectedRespDept = null; _imageBytes = null; _isUploading = false;
-              });
-              
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Safety Record Submitted Successfully!")));
-            },
-            child: _isUploading 
-              ? const CircularProgressIndicator(color: Colors.white) 
-              : const Text("Submit Record | تسجيل", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))
-          )),
-          const SizedBox(height: 40),
+          // Submit
+          SizedBox(
+            width: double.infinity,
+            height: 55,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+              onPressed: () async {
+                if (_oc.text.isEmpty || selectedArea == null) return;
+                
+                final ref = FirebaseDatabase.instance.ref('atr').push();
+                await ref.set({
+                  'area': selectedArea,
+                  'observationOrIssueOrHazard': _oc.text,
+                  'status': 'Pending',
+                  'issueDate': DateTime.now().toIso8601String(),
+                  'type': selectedType ?? "Unsafe_Condition",
+                  'hazard_kind': selectedHazardKind ?? "General",
+                  'electrical_kind': selectedElectricalKind ?? "Other",
+                  'level': selectedLevel ?? "Low",
+                  'respDepartment': selectedDept ?? "Safety",
+                  'depPersonExecuter': assignedTo ?? "Unassigned",
+                  'vector': _currentVector, // CRITICAL for duplicate detection
+                  'reporter': FirebaseAuth.instance.currentUser?.email ?? "Anonymous",
+                });
+
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Record saved successfully!")));
+                Navigator.pop(context); // Go back after success
+              },
+              child: const Text("Submit Record | تسجيل البلاغ", style: TextStyle(fontSize: 16)),
+            ),
+          ),
+          const SizedBox(height: 50),
         ],
-      )
+      ),
     );
   }
 }

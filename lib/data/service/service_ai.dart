@@ -10,7 +10,7 @@ class ServiceAI {
   ServiceAI._internal();
 
   final IRepoHazardClassifier classifier = RepoHazardClassifier();
-  final RealDuplicateDetector duplicateService = RealDuplicateDetector();
+  final RealDuplicateDetector duplicateDetector = RealDuplicateDetector();
 
   bool _isInitialized = false;
 
@@ -20,24 +20,35 @@ class ServiceAI {
     // Load models in parallel to save time
     await Future.wait([
       classifier.loadModel(),
-      duplicateService.loadModel(),
+      duplicateDetector.loadModel(),
     ]);
     
     _isInitialized = true;
     print("All AI Models Initialized");
   }
 
-  /// Run all text analysis in one go
-  Future<Map<String, dynamic>> analyzeObservation(String text) async {
-    // We run these in parallel
+  /// The 'Unified Brain' method.
+  /// Runs classification and embedding generation simultaneously.
+  Future<Map<String, dynamic>> analyzeFull(String text) async {
+    // Safety check to ensure models are ready
+    if (!_isInitialized) {
+      await initAllModels();
+    }
+
+    // Run both AI tasks in parallel to minimize waiting time for the user
     final results = await Future.wait([
       classifier.predict(text),
-      duplicateService.getEmbedding(text),
+      duplicateDetector.getEmbedding(text),
     ]);
 
+    // results[0] is the Map<String, String> from the Classifier
+    // results[1] is the List<double> (512 vector) from the Duplicate Detector
     return {
-      'prediction': results[0] as Map<String, String>,
-      'vector': results[1] as List<double>,
+      'classification': results[0] as Map<String, String>,
+      'embedding': results[1] as List<double>,
     };
   }
+
+  /// Helper to check if AI is ready to use
+  bool get isReady => _isInitialized;
 }
