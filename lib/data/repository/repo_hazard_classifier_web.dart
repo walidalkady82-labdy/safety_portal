@@ -1,15 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:safety_portal/core/logger.dart';
 import 'package:tflite_web/tflite_web.dart'; // Web-Specific Package
 import 'i_repo_hazard_classifier.dart';
 
-class RepoHazardClassifier implements IRepoHazardClassifier {
+class RepoHazardClassifier with LogMixin implements IRepoHazardClassifier {
   TFLiteModel? _model;
   Map<String, int>? _vocab;
-  
-  // Default Type list for Dropdown (since model doesn't predict it)
-  List<String> _typeLabels = ["Unsafe_Condition", "Unsafe_Behavior", "NM", "FA"]; 
-  
+  final List<String> _typeLabels = ["Unsafe_Condition", "Unsafe_Behavior", "NM", "FA"]; 
   List<String> _hazardLabels = [];
   List<String> _elecLabels = [];
   List<String> _levelLabels = [];
@@ -25,74 +23,53 @@ class RepoHazardClassifier implements IRepoHazardClassifier {
   Future<void> loadModel() async {
     if (_isLoaded) return;
     try {
-      await TFLiteWeb.initializeUsingCDN();
-      // 1. Load Model (Web uses URL path to assets)
+      // Model path should match assets folder structure
       _model = await TFLiteModel.fromUrl('assets/safety_model.tflite');
-      
-      // 2. Load Vocab
       _vocab = Map<String, int>.from(jsonDecode(await rootBundle.loadString('assets/vocab.json')));
-      
-      // 3. Load Labels (Only for the 3 outputs)
       _hazardLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/labels_hazard.json')));
       _elecLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/labels_elec.json')));
       _levelLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/labels_level.json')));
-      
       _isLoaded = true;
-      print("Web TFLite Model Loaded (3 Outputs)");
+      logInfo("Web AI Classifier: Ready.");
     } catch (e) {
-      print("Web Model Load Error: $e");
+      logError("Web AI Classifier Error: $e");
     }
   }
 
   @override
   Future<Map<String, String>> predict(String text) async {
-    if (!_isLoaded) await loadModel();
-    if (_model == null) return {};
-
-    // 1. Tokenize Input
-    var inputTokens = _tokenize(text, 120);
-
-    // 2. Run Inference
-    // Returns a List of output tensors (Lists of probabilities)
-    final output = _model!.predict<List<dynamic>>(inputTokens);
-    
-    // 3. Map Outputs
-    // Assumption: Order is [Hazard, Electrical, Level]
-    if (output.length >= 3) {
-      return {
-        "type": "Unsafe_Condition", // Fixed Default
-        "hazard_kind": _hazardLabels[_argmax(output[0] as List)],
-        "electrical_kind": _elecLabels[_argmax(output[1] as List)],
-        "level": _levelLabels[_argmax(output[2] as List)]
-      };
-    }
+    if (!_isLoaded || _model == null) return {};
+    try {
+      final inputTokens = _tokenize(text, 120);
+      final output = _model!.predict<List<dynamic>>(inputTokens);
+      if (output.length >= 3) {
+        return {
+          "type": "Unsafe_Condition",
+          "hazard_kind": _hazardLabels[_argmax(output[0] as List)],
+          "electrical_kind": _elecLabels[_argmax(output[1] as List)],
+          "level": _levelLabels[_argmax(output[2] as List)]
+        };
+      }
+    } catch (e) { logError("Inference Error: $e"); }
     return {};
   }
 
   List<double> _tokenize(String text, int maxLen) {
     if (_vocab == null) return List.filled(maxLen, 0.0);
     List<String> words = text.toLowerCase().split(RegExp(r'\s+'));
-    List<double> tokens = [];
-    for (String word in words) {
-      if (tokens.length >= maxLen) break;
-      int? index = _vocab![word];
-      if (index == null) {
-         String stripped = word.replaceAll(RegExp(r'[^\w\s\u0600-\u06FF]'), ''); 
-         index = _vocab![stripped];
-      }
-      tokens.add((index ?? _vocab!['<OOV>'] ?? 1).toDouble());
+    List<double> tokens = words.map((w) => (_vocab![w] ?? _vocab!['<OOV>'] ?? 1).toDouble()).toList();
+    while (tokens.length < maxLen) {
+      tokens.add(0.0);
     }
-    while (tokens.length < maxLen) tokens.add(0.0);
-    return tokens;
+    return tokens.take(maxLen).toList();
   }
 
   int _argmax(List<dynamic> list) {
-    double maxVal = -double.infinity;
-    int maxIdx = 0;
-    for (int i = 0; i < list.length; i++) {
+    double max = -1.0; int idx = 0;
+    for (int i=0; i<list.length; i++) { 
       double val = (list[i] as num).toDouble();
-      if (val > maxVal) { maxVal = val; maxIdx = i; }
+      if (val > max) { max = val; idx = i; } 
     }
-    return maxIdx;
+    return idx;
   }
 }

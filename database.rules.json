@@ -1,13 +1,6 @@
 {
   "rules": {
-    "atr": {
-      ".read": "auth != null",
-      ".write": "auth != null",
-      ".indexOn": ["no"]
-    },
-    "users": {
-      ".read": "auth != null",
-      ".write": "false" 
-    }
+    ".read": true,
+    ".write": true
   }
 }
