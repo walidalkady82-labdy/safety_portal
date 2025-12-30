@@ -1,3 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart' show kDebugMode,defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:safety_portal/core/themes.dart';
@@ -11,6 +14,32 @@ List<ModelUserData> globalUsers = [];
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    // 2. CONNECT TO EMULATORS (Debug Mode Only)
+  // This prevents your local testing from touching live production data.
+  if (kDebugMode) {
+    try {
+      // For Android emulators, localhost is 10.0.2.2
+      // For Web/iOS, it is localhost
+      String host = defaultTargetPlatform == TargetPlatform.android ? '10.0.2.2' : 'localhost';
+      
+      print("Connecting to Firebase Emulators at $host...");
+      
+      await FirebaseAuth.instance.useAuthEmulator(host, 9099);
+      FirebaseDatabase.instance.useDatabaseEmulator(host, 9000);
+    } catch (e) {
+      print("Error connecting to emulators: $e");
+    }
+  }
+    // 3. MANDATORY AUTH (Rule 3)
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      await FirebaseAuth.instance.signInAnonymously();
+      print("Auth: Signed in anonymously");
+    }
+  } catch (e) {
+    print("Auth Error: $e");
+  }
   await ServiceAI().initAllModels();
   runApp(const MaintenancePortalApp());
 }
