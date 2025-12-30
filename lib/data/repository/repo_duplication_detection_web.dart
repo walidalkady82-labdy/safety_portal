@@ -1,42 +1,109 @@
+import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
+import 'package:safety_portal/data/repository/i_repo_duplication_detection.dart';
 import 'package:tflite_web/tflite_web.dart';
-import 'i_repo_duplication_detection.dart';
 
 class RealDuplicateDetector implements IRepoDuplicationDetection {
-  TFLiteModel? _model;
+TFLiteModel? _model;
+  Map<String, int>? _vocab;
   bool _isLoaded = false;
   static bool _wasmInitialized = false;
 
-  @override bool get isLoaded => _isLoaded;
+  @override
+  bool get isLoaded => _isLoaded;
 
   @override
   Future<void> loadModel() async {
     if (_isLoaded) return;
-    if (!_wasmInitialized) {
-      await TFLiteWeb.initializeUsingCDN();
-      _wasmInitialized = true;
+    try {
+      // 1. Initialize TFLite WASM binaries from Google CDN
+      if (!_wasmInitialized) {
+        print("Web AI: Initializing WASM...");
+        await TFLiteWeb.initializeUsingCDN();
+        _wasmInitialized = true;
+      }
+
+      // 2. Load the 64-dimension embedding model
+      _model = await TFLiteModel.fromUrl('assets/embedding_model.tflite');
+      
+      // 3. Load the shared vocabulary
+      final vocabData = await rootBundle.loadString('assets/vocab.json');
+      _vocab = Map<String, int>.from(jsonDecode(vocabData));
+      
+      _isLoaded = true;
+      print("Web AI: Duplicate Detector (64-dim) Ready.");
+    } catch (e) {
+      print("Web AI Load Error: $e");
     }
-    // Load the specialized embedding model
-    _model = await TFLiteModel.fromUrl('assets/embedding_model.tflite');
-    _isLoaded = true;
   }
 
   @override
   Future<List<double>> getEmbedding(String text) async {
-    if (!_isLoaded) return [];
-    // Tokenization and inference logic for Web
-    final output = _model!.predict<List<dynamic>>([0.0]); // Simplified example
-    return List<double>.from(output[0]);
+    if (!_isLoaded) await loadModel();
+    if (_model == null) return [];
+
+    try {
+      // MODIFICATION: Use Float32List for Web AI compatibility
+      // MaxLen must match MAX_LEN = 120 from Python
+      final tokens = _tokenize(text, 120);
+      final input = Float32List.fromList(tokens);
+      
+      // Run prediction
+      final output = _model!.predict<List<dynamic>>(input);
+      
+      if (output.isNotEmpty) {
+        // Explicitly cast to num then double to handle JS number types safely
+        final rawList = output[0] as List;
+        return rawList.map((e) => (e as num).toDouble()).toList();
+      }
+    } catch (e) {
+      print("Web AI Inference Error: $e");
+    }
+    
+    return [];
   }
 
   @override
   double calculateSimilarity(List<double> vecA, List<double> vecB) {
-    double dot = 0.0, nA = 0.0, nB = 0.0;
-    for (int i = 0; i < vecA.length; i++) {
-      dot += vecA[i] * vecB[i];
-      nA += vecA[i] * vecA[i];
-      nB += vecB[i] * vecB[i];
+    if (vecA.length != vecB.length) {
+      print("Web AI Similarity Error: Vector length mismatch (${vecA.length} vs ${vecB.length})");
+      return 0.0;
     }
-    return dot / (sqrt(nA) * sqrt(nB));
+    
+    double dotProduct = 0.0;
+    double normA = 0.0;
+    double normB = 0.0;
+    
+    for (int i = 0; i < vecA.length; i++) {
+      dotProduct += vecA[i] * vecB[i];
+      normA += vecA[i] * vecA[i];
+      normB += vecB[i] * vecB[i];
+    }
+    
+    if (normA == 0 || normB == 0) return 0;
+    return dotProduct / (sqrt(normA) * sqrt(normB));
+  }
+
+  List<double> _tokenize(String text, int maxLen) {
+    if (_vocab == null) return List.filled(maxLen, 0.0);
+    
+    List<String> words = text.toLowerCase().split(RegExp(r'\s+'));
+    
+    // Explicitly convert all tokens to doubles for Web safety
+    List<double> tokens = words.map((w) {
+      final id = (_vocab![w] ?? _vocab!['<OOV>'] ?? 1);
+      return id.toDouble();
+    }).toList();
+    
+    // Standard Padding/Truncating to 120
+    if (tokens.length > maxLen) {
+      return tokens.sublist(0, maxLen);
+    }
+    while (tokens.length < maxLen) {
+      tokens.add(0.0);
+    }
+    return tokens;
   }
 }

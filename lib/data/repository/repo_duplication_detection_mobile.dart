@@ -36,7 +36,7 @@ class RealDuplicateDetector implements IRepoDuplicationDetection {
     if (_interpreter == null) return [];
 
     // 1. Tokenize the input text
-    var input = [_tokenize(text, 256)];
+    var input = [_tokenize(text, 120)];
     
     // 2. Prepare output buffer (USE Lite outputs a 512-dimension vector)
     var output = List.filled(1 * 512, 0.0).reshape([1, 512]);

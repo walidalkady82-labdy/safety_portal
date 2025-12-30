@@ -27,7 +27,7 @@ class RepoHazardClassifier implements IRepoHazardClassifier {
     try {
       await TFLiteWeb.initializeUsingCDN();
       // 1. Load Model (Web uses URL path to assets)
-      _model = await TFLiteModel.fromUrl('assets/maintenance_model.tflite');
+      _model = await TFLiteModel.fromUrl('assets/safety_model.tflite');
       
       // 2. Load Vocab
       _vocab = Map<String, int>.from(jsonDecode(await rootBundle.loadString('assets/vocab.json')));
@@ -50,8 +50,8 @@ class RepoHazardClassifier implements IRepoHazardClassifier {
     if (_model == null) return {};
 
     // 1. Tokenize Input
-    var inputTokens = _tokenize(text, 256);
-    
+    var inputTokens = _tokenize(text, 120);
+
     // 2. Run Inference
     // Returns a List of output tensors (Lists of probabilities)
     final output = _model!.predict<List<dynamic>>(inputTokens);

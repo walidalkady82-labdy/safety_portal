@@ -49,7 +49,7 @@ class RepoHazardClassifier implements IRepoHazardClassifier {
     if (_interpreter == null) return {};
 
     // 1. Tokenize Input
-    var input = [_tokenize(text, 256)];
+    var input = [_tokenize(text, 120)];
     
     // 2. Prepare Output Buffers (Only 3 now)
     // We create a buffer for each specific output head of the model
