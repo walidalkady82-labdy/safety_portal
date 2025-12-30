@@ -14,20 +14,30 @@ List<ModelUserData> globalUsers = [];
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-    // 2. CONNECT TO EMULATORS (Debug Mode Only)
-  // This prevents your local testing from touching live production data.
+  // --- CONNECT TO EMULATORS ---
+  // We only want to use emulators during development (debug mode)
   if (kDebugMode) {
+    // 1. Determine the Host IP
+    // Android Emulators need '10.0.2.2' to see your computer's localhost.
+    // iOS and Web can use 'localhost'.
+    String host = defaultTargetPlatform == TargetPlatform.android ? '10.0.2.2' : 'localhost';
+
+    print("Connecting to Firebase Emulators on $host...");
+
     try {
-      // For Android emulators, localhost is 10.0.2.2
-      // For Web/iOS, it is localhost
-      String host = defaultTargetPlatform == TargetPlatform.android ? '10.0.2.2' : 'localhost';
-      
-      print("Connecting to Firebase Emulators at $host...");
-      
+      // Connect Authentication (Port 9099)
       await FirebaseAuth.instance.useAuthEmulator(host, 9099);
+      
+      // Connect Realtime Database (Port 9000)
+      // Note: Ensure the databaseURL matches your project
       FirebaseDatabase.instance.useDatabaseEmulator(host, 9000);
+      
+      // Connect Storage (Port 9199)
+      //await FirebaseStorage.instance.useStorageEmulator(host, 9199);
+      
+      print("✅ Successfully redirected to Local Emulators");
     } catch (e) {
-      print("Error connecting to emulators: $e");
+      print("❌ Error connecting to emulators: $e");
     }
   }
     // 3. MANDATORY AUTH (Rule 3)

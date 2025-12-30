@@ -1,0 +1,14 @@
+{
+  "version": "2",
+  "projectNumber": "653844014276",
+  "projectId": "database-a1f2a",
+  "appId": "1:653844014276:web:13a72d4d04886236185591",
+  "realtimeDatabaseInstanceUri": "https://database-a1f2a-default-rtdb.firebaseio.com",
+  "realtimeDatabaseUrl": "",
+  "storageBucket": "database-a1f2a.firebasestorage.app",
+  "locationId": "",
+  "apiKey": "AIzaSyCYL-skSp_kfklpf2jy3NlCqJwrUzuIwZM",
+  "authDomain": "database-a1f2a.firebaseapp.com",
+  "messagingSenderId": "653844014276",
+  "measurementId": "G-6ZG51LRLY4"
+}
