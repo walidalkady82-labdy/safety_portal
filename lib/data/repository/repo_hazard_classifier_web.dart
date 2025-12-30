@@ -24,11 +24,17 @@ class RepoHazardClassifier with LogMixin implements IRepoHazardClassifier {
     if (_isLoaded) return;
     try {
       // Model path should match assets folder structure
-      _model = await TFLiteModel.fromUrl('assets/safety_model.tflite');
-      _vocab = Map<String, int>.from(jsonDecode(await rootBundle.loadString('assets/vocab.json')));
-      _hazardLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/labels_hazard.json')));
-      _elecLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/labels_elec.json')));
-      _levelLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/labels_level.json')));
+      //_model = await TFLiteModel.fromUrl('assets/ai/safety_model.tflite');
+      await TFLiteWeb.initializeUsingCDN();
+
+      final byteData = await rootBundle.load('assets/ai/safety_model.tflite');
+      final bytes = byteData.buffer.asUint8List();
+      _model = await TFLiteModel.fromMemory(bytes);
+
+      _vocab = Map<String, int>.from(jsonDecode(await rootBundle.loadString('assets/ai/vocab.json')));
+      _hazardLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/ai/labels_hazard.json')));
+      _elecLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/ai/labels_elec.json')));
+      _levelLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/ai/labels_level.json')));
       _isLoaded = true;
       logInfo("Web AI Classifier: Ready.");
     } catch (e) {

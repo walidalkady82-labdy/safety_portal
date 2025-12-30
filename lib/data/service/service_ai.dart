@@ -55,10 +55,13 @@ class ServiceAI {
       }
       
       // Load specific models in parallel
-      await Future.wait([
-        classifier.loadModel(),
-        duplicateDetector.loadModel(),
-      ]);
+      await classifier.loadModel();
+      await duplicateDetector.loadModel();
+
+      // await Future.wait([
+      //   classifier.loadModel(),
+      //   duplicateDetector.loadModel(),
+      // ]);
       
       _isInitialized = true;
       print("✅ [SUCCESS] All AI Models Initialized Successfully");

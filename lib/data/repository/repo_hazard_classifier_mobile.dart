@@ -26,15 +26,15 @@ class RepoHazardClassifier implements IRepoHazardClassifier {
     if (_isLoaded) return;
     try {
       // Load the TFLite model
-      _interpreter = await Interpreter.fromAsset('assets/maintenance_model.tflite');
+      _interpreter = await Interpreter.fromAsset('assets/ai/maintenance_model.tflite');
       
       // Load Vocabulary
-      _vocab = Map<String, int>.from(jsonDecode(await rootBundle.loadString('assets/vocab.json')));
+      _vocab = Map<String, int>.from(jsonDecode(await rootBundle.loadString('assets/ai/vocab.json')));
       
       // Load Labels for the 3 predicted outputs
-      _hazardLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/labels_hazard.json')));
-      _elecLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/labels_elec.json')));
-      _levelLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/labels_level.json')));
+      _hazardLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/ai/labels_hazard.json')));
+      _elecLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/ai/labels_elec.json')));
+      _levelLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/ai/labels_level.json')));
       
       _isLoaded = true;
       print("Mobile TFLite Model Loaded (3 Outputs)");

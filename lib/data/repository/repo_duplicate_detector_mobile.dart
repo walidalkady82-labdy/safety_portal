@@ -17,10 +17,10 @@ class RepoDuplicateDetector implements IRepoDuplicateDetector {
     if (_isLoaded) return;
     try {
       // Load the specialized embedding model (USE-Lite)
-      _interpreter = await Interpreter.fromAsset('assets/embedding_model.tflite');
+      _interpreter = await Interpreter.fromAsset('assets/ai/embedding_model.tflite');
       
       // Load the vocabulary for tokenization
-      _vocab = Map<String, int>.from(jsonDecode(await rootBundle.loadString('assets/vocab.json')));
+      _vocab = Map<String, int>.from(jsonDecode(await rootBundle.loadString('assets/ai/vocab.json')));
       
       _isLoaded = true;
       print("Mobile Embedding Model Loaded successfully.");
