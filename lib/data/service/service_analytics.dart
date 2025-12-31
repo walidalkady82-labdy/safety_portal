@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'dart:math';
 
 class RiskMetric {
   final String area;
@@ -15,7 +14,7 @@ class RiskMetric {
   });
 }
 
-class DashboardService {
+class ServiceAnalytics {
   final Map<String, int> levelWeights = {
     'low': 1,
     'medium': 3,

@@ -6,7 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:logging/logging.dart';
 import 'package:safety_portal/core/themes.dart';
 import 'package:safety_portal/data/model/model_user_data.dart';
-import 'package:safety_portal/data/service/service_ai.dart';
+import 'package:safety_portal/locator.dart';
 import 'package:safety_portal/presentation/auth/auth_wrapper.dart';
 import 'firebase_options.dart';
 
@@ -55,6 +55,8 @@ void main() async {
   } catch (e) {
     log.severe("Auth Error: $e");
   }
+  await setupLocator();
+  await sl.allReady();
   runApp(const MaintenancePortalApp());
 }
 

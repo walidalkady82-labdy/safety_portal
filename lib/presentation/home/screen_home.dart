@@ -101,7 +101,7 @@ class _ScreenHomeState extends State<ScreenHome> {
   // ===========================================================================
   Widget _buildLiveDashboard() {
     return StreamBuilder<List<RiskMetric>>(
-      stream: DashboardService().analyticsStream,
+      stream: ServiceAnalytics().analyticsStream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -243,10 +243,7 @@ class _ScreenHomeState extends State<ScreenHome> {
   // TAB 1: REPORT SUBMISSION FORM (Silent AI + Duplicate Check)
   // ===========================================================================
   Widget _buildReportForm() {
-    return FutureBuilder(
-      future: ServiceAI().initAllModels(), 
-      builder: (context, asyncSnapshot) {
-        return SingleChildScrollView(
+    return SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,8 +353,6 @@ class _ScreenHomeState extends State<ScreenHome> {
             ],
           ),
         );
-      }
-    );
   }
 
   Widget _buildCompactDropdown(String label, List<String> items, String? value, Function(String?) onChanged) {
@@ -444,7 +439,7 @@ class _ScreenHomeState extends State<ScreenHome> {
         // Basic check to ensure vector length matches (e.g. 64)
         if (rawVec.length == newVector.length) {
           List<double> existingVec = rawVec.map((e) => (e as num).toDouble()).toList();
-          double sim = ServiceAI().duplicateDetector.calculateSimilarity(newVector, existingVec);
+          double sim = 0; //ServiceAI().duplicateDetector.calculateSimilarity(newVector, existingVec);
           
           if (sim > maxSimilarity) {
             maxSimilarity = sim;
@@ -534,6 +529,4 @@ class _ScreenHomeState extends State<ScreenHome> {
       ),
     );
   }
-
-  int min(int a, int b) => a < b ? a : b;
 }
