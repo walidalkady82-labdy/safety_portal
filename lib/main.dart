@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart' show kDebugMode,defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:logging/logging.dart';
 import 'package:safety_portal/core/themes.dart';
 import 'package:safety_portal/data/model/model_user_data.dart';
 import 'package:safety_portal/data/service/service_ai.dart';
@@ -13,6 +14,10 @@ List<ModelUserData> globalUsers = [];
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Logger.root.onRecord.listen((record) {
+    debugPrint('${record.level.name}: ${record.time}: ${record.message}');
+  });
+  final log = Logger("main");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // --- CONNECT TO EMULATORS ---
   // We only want to use emulators during development (debug mode)
@@ -22,7 +27,7 @@ void main() async {
     // iOS and Web can use 'localhost'.
     String host = defaultTargetPlatform == TargetPlatform.android ? '10.0.2.2' : 'localhost';
 
-    print("Connecting to Firebase Emulators on $host...");
+    log.info("Connecting to Firebase Emulators on $host...");
 
     try {
       // Connect Authentication (Port 9099)
@@ -35,9 +40,9 @@ void main() async {
       // Connect Storage (Port 9199)
       //await FirebaseStorage.instance.useStorageEmulator(host, 9199);
       
-      print("✅ Successfully redirected to Local Emulators");
+      log.info("✅ Successfully redirected to Local Emulators");
     } catch (e) {
-      print("❌ Error connecting to emulators: $e");
+      log.severe("❌ Error connecting to emulators: $e");
     }
   }
     // 3. MANDATORY AUTH (Rule 3)
@@ -45,12 +50,11 @@ void main() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       await FirebaseAuth.instance.signInAnonymously();
-      print("Auth: Signed in anonymously");
+      log.info("Auth: Signed in anonymously");
     }
   } catch (e) {
-    print("Auth Error: $e");
+    log.severe("Auth Error: $e");
   }
-  await ServiceAI().initAllModels();
   runApp(const MaintenancePortalApp());
 }
 

@@ -4,7 +4,10 @@ import 'package:safety_portal/core/logger.dart';
 import 'package:tflite_web/tflite_web.dart'; // Web-Specific Package
 import 'i_repo_hazard_classifier.dart';
 
-class RepoHazardClassifier with LogMixin implements IRepoHazardClassifier {
+IRepoHazardClassifier createClassifier() => RepoHazardClassifierWeb();
+
+
+class RepoHazardClassifierWeb with LogMixin implements IRepoHazardClassifier {
   TFLiteModel? _model;
   Map<String, int>? _vocab;
   final List<String> _typeLabels = ["Unsafe_Condition", "Unsafe_Behavior", "NM", "FA"]; 
@@ -25,11 +28,9 @@ class RepoHazardClassifier with LogMixin implements IRepoHazardClassifier {
     try {
       // Model path should match assets folder structure
       //_model = await TFLiteModel.fromUrl('assets/ai/safety_model.tflite');
+      logInfo("Web AI Classifier: initializing...");
       await TFLiteWeb.initializeUsingCDN();
-
-      final byteData = await rootBundle.load('assets/ai/safety_model.tflite');
-      final bytes = byteData.buffer.asUint8List();
-      _model = await TFLiteModel.fromMemory(bytes);
+      _model = await TFLiteModel.fromUrl("assets/ai/safety_model.tflite");
 
       _vocab = Map<String, int>.from(jsonDecode(await rootBundle.loadString('assets/ai/vocab.json')));
       _hazardLabels = List<String>.from(jsonDecode(await rootBundle.loadString('assets/ai/labels_hazard.json')));

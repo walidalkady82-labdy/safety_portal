@@ -1,39 +1,36 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
-import 'package:tflite_web/tflite_web.dart';
+import 'package:safety_portal/core/logger.dart';
+import 'package:safety_portal/data/repository/i_repo_duplicate_detector.dart';
+import 'package:safety_portal/data/repository/i_repo_hazard_classifier.dart';
 import '../repository/switcher_hazard_classifier.dart';
 import '../repository/switcher_duplicate_detector.dart';
 
-class ServiceAI {
+class ServiceAI with LogMixin{
   static final ServiceAI _instance = ServiceAI._internal();
   factory ServiceAI() => _instance;
   ServiceAI._internal();
 
   // Use the Switcher classes (which handle the conditional imports)
-  final IRepoHazardClassifier classifier = RepoHazardClassifier();
-  final IRepoDuplicateDetector duplicateDetector = RepoDuplicateDetector();
+  final IRepoHazardClassifier classifier = createClassifier();
+  final IRepoDuplicateDetector duplicateDetector = createDuplicateDetector();
 
   bool _isInitialized = false;
 
   Future<void> initAllModels() async {
     if (_isInitialized) return;
 
-    try {
-      if (kIsWeb) {
-        print("🚀 [DEBUG] Web AI: Initializing TFLite WASM engine...");
-        await TFLiteWeb.initializeUsingCDN();
-      }
-      
+    try {   
       // 3. Load models (Now safe to do in parallel)
+      logInfo("ServiceAI: initializing AI models");
       await Future.wait([
         classifier.loadModel(),
         duplicateDetector.loadModel(),
       ]);
       
       _isInitialized = true;
-      print("✅ [SUCCESS] All AI Models Initialized Successfully");
+      logInfo("✅ [SUCCESS] All AI Models Initialized Successfully");
     } catch (e) {
-      print("❌ [ERROR] AI Service Init Failure: $e");
+      logError("❌ [ERROR] AI Service Init Failure: $e");
       // Mark as initialized so the UI doesn't hang (it will use keyword fallback)
       _isInitialized = true; 
     }

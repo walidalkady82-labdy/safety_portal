@@ -1,11 +1,12 @@
 import 'dart:math';
-import 'package:flutter/services.dart';
 import 'package:safety_portal/core/logger.dart';
 import 'package:safety_portal/data/repository/i_repo_duplicate_detector.dart';
 import 'package:tflite_web/tflite_web.dart';
 
+IRepoDuplicateDetector createDuplicateDetector() => RepoDuplicateDetectorWeb();
 
-class RepoDuplicateDetector with LogMixin implements IRepoDuplicateDetector {
+
+class RepoDuplicateDetectorWeb with LogMixin implements IRepoDuplicateDetector {
   TFLiteModel? _model;
   bool _isLoaded = false;
   bool _fallbackActive = false;
@@ -16,13 +17,11 @@ class RepoDuplicateDetector with LogMixin implements IRepoDuplicateDetector {
   Future<void> loadModel() async {
     if (_isLoaded) return;
     try {
-      logInfo("Web AI: Initializing Duplicate Detector...");
+      logInfo("Web AI duplicate detector: initializing...");
       //_model = await TFLiteModel.fromUrl('assets/ai/embedding_model.tflite');
-
-      final byteData = await rootBundle.load('assets/ai/embedding_model.tflite');
-      final bytes = byteData.buffer.asUint8List();
-      _model = await TFLiteModel.fromMemory(bytes);
-
+      await TFLiteWeb.initializeUsingCDN();
+      _model = await TFLiteModel.fromUrl("assets/ai/embedding_model.tflite");
+      logInfo("Web AI duplicate detector: ready...");
       _isLoaded = true;
     } catch (e) {
       logError("Web AI Notice: Embedding WASM failed. Duplicate detection will use direct text matching. : $e");

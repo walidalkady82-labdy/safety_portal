@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'i_repo_hazard_classifier.dart';
 
-class RepoHazardClassifier implements IRepoHazardClassifier {
+IRepoHazardClassifier createClassifier() => RepoHazardClassifierMobile();
+
+class RepoHazardClassifierMobile implements IRepoHazardClassifier {
   Interpreter? _interpreter;
   Map<String, int>? _vocab;
   

@@ -44,6 +44,7 @@ class _ScreenHomeState extends State<ScreenHome> {
   final List<String> _types = ["Unsafe_Condition", "Unsafe_Behavior", "NM", "FA"];
   final List<String> _levels = ["Low", "Medium", "High"];
 
+
   @override
   void dispose() {
     _debounce?.cancel();
@@ -242,115 +243,120 @@ class _ScreenHomeState extends State<ScreenHome> {
   // TAB 1: REPORT SUBMISSION FORM (Silent AI + Duplicate Check)
   // ===========================================================================
   Widget _buildReportForm() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("New Observation", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 20),
-          
-          DropdownButtonFormField<String>(
-            value: selectedArea,
-            items: _areas.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-            onChanged: (v) => setState(() => selectedArea = v),
-            decoration: const InputDecoration(labelText: "Area", border: OutlineInputBorder()),
-          ),
-          const SizedBox(height: 16),
-
-          // --- OBSERATION INPUT WITH SILENT AI ---
-          TextField(
-            controller: _observationController,
-            onChanged: _onObservationChanged, // Triggers silent AI
-            maxLines: 3,
-            decoration: InputDecoration(
-              labelText: "Describe the Issue",
-              border: const OutlineInputBorder(),
-              suffixIcon: isAiLoading 
-                  ? const Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.edit_note, color: Colors.grey),
-            ),
-          ),
-          
-          // --- DUPLICATE WARNING BANNER ---
-          if (_duplicateWarning != null)
-            Container(
-              margin: const EdgeInsets.only(top: 12),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.amber.shade50,
-                border: Border.all(color: Colors.amber),
-                borderRadius: BorderRadius.circular(8),
+    return FutureBuilder(
+      future: ServiceAI().initAllModels(), 
+      builder: (context, asyncSnapshot) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("New Observation", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              
+              DropdownButtonFormField<String>(
+                value: selectedArea,
+                items: _areas.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                onChanged: (v) => setState(() => selectedArea = v),
+                decoration: const InputDecoration(labelText: "Area", border: OutlineInputBorder()),
               ),
-              child: Row(
+              const SizedBox(height: 16),
+        
+              // --- OBSERATION INPUT WITH SILENT AI ---
+              TextField(
+                controller: _observationController,
+                onChanged: _onObservationChanged, // Triggers silent AI
+                maxLines: 3,
+                decoration: InputDecoration(
+                  labelText: "Describe the Issue",
+                  border: const OutlineInputBorder(),
+                  suffixIcon: isAiLoading 
+                      ? const Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.edit_note, color: Colors.grey),
+                ),
+              ),
+              
+              // --- DUPLICATE WARNING BANNER ---
+              if (_duplicateWarning != null)
+                Container(
+                  margin: const EdgeInsets.only(top: 12),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.shade50,
+                    border: Border.all(color: Colors.amber),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.warning_amber_rounded, color: Colors.orange),
+                      const SizedBox(width: 12),
+                      Expanded(child: Text(_duplicateWarning!, style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold))),
+                    ],
+                  ),
+                ),
+                
+              const SizedBox(height: 16),
+        
+              TextField(
+                controller: _actionController,
+                maxLines: 2,
+                decoration: const InputDecoration(labelText: "Action Taken / Required", border: OutlineInputBorder()),
+              ),
+              const SizedBox(height: 16),
+              
+              DropdownButtonFormField(
+                value: selectedDept,
+                items: _departments.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                onChanged: (v) => setState(() => selectedDept = v),
+                decoration: const InputDecoration(labelText: "Department", border: OutlineInputBorder()),
+              ),
+        
+              const SizedBox(height: 20),
+              const Divider(),
+              Row(
                 children: [
-                  const Icon(Icons.warning_amber_rounded, color: Colors.orange),
-                  const SizedBox(width: 12),
-                  Expanded(child: Text(_duplicateWarning!, style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold))),
+                  const Text("Classification (Auto-Updated)", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
+                  const Spacer(),
+                  if (isAiLoading) const Text("Analyzing...", style: TextStyle(fontSize: 12, color: AppColors.primary))
                 ],
               ),
-            ),
-            
-          const SizedBox(height: 16),
-
-          TextField(
-            controller: _actionController,
-            maxLines: 2,
-            decoration: const InputDecoration(labelText: "Action Taken / Required", border: OutlineInputBorder()),
-          ),
-          const SizedBox(height: 16),
-          
-          DropdownButtonFormField(
-            value: selectedDept,
-            items: _departments.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-            onChanged: (v) => setState(() => selectedDept = v),
-            decoration: const InputDecoration(labelText: "Department", border: OutlineInputBorder()),
-          ),
-
-          const SizedBox(height: 20),
-          const Divider(),
-          Row(
-            children: [
-              const Text("Classification (Auto-Updated)", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
-              const Spacer(),
-              if (isAiLoading) const Text("Analyzing...", style: TextStyle(fontSize: 12, color: AppColors.primary))
+              const SizedBox(height: 10),
+        
+              // Auto-filled fields
+              Row(
+                children: [
+                  Expanded(child: _buildCompactDropdown("Type", _types, selectedType, (v) => setState(() => selectedType = v))),
+                  const SizedBox(width: 10),
+                  Expanded(child: _buildCompactDropdown("Level", _levels, selectedLevel, (v) => setState(() => selectedLevel = v))),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: _buildCompactDropdown("Hazard Kind", ServiceAI().classifier.hazardLabels.isNotEmpty ? ServiceAI().classifier.hazardLabels : ["General"], selectedHazardKind, (v) => setState(() => selectedHazardKind = v))),
+                ],
+              ),
+        
+              const SizedBox(height: 30),
+              
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: isSubmitting ? null : _submitReport,
+                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+                  child: isSubmitting 
+                      ? const CircularProgressIndicator(color: Colors.white) 
+                      : const Text("Submit Report"),
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 10),
-
-          // Auto-filled fields
-          Row(
-            children: [
-              Expanded(child: _buildCompactDropdown("Type", _types, selectedType, (v) => setState(() => selectedType = v))),
-              const SizedBox(width: 10),
-              Expanded(child: _buildCompactDropdown("Level", _levels, selectedLevel, (v) => setState(() => selectedLevel = v))),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(child: _buildCompactDropdown("Hazard Kind", ServiceAI().classifier.hazardLabels.isNotEmpty ? ServiceAI().classifier.hazardLabels : ["General"], selectedHazardKind, (v) => setState(() => selectedHazardKind = v))),
-            ],
-          ),
-
-          const SizedBox(height: 30),
-          
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: isSubmitting ? null : _submitReport,
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
-              child: isSubmitting 
-                  ? const CircularProgressIndicator(color: Colors.white) 
-                  : const Text("Submit Report"),
-            ),
-          ),
-        ],
-      ),
+        );
+      }
     );
   }
 

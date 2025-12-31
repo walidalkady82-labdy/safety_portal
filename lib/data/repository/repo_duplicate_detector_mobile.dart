@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:safety_portal/data/repository/i_repo_duplicate_detector.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
-class RepoDuplicateDetector implements IRepoDuplicateDetector {
+IRepoDuplicateDetector createDuplicateDetector() => RepoDuplicateDetectorMobile();
+
+class RepoDuplicateDetectorMobile implements IRepoDuplicateDetector {
   Interpreter? _interpreter;
   Map<String, int>? _vocab;
   bool _isLoaded = false;
