@@ -6,7 +6,7 @@
     "rules": "storage.rules"
   },
   "hosting": {
-    "public": "build/web",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -14,7 +14,7 @@
     ],
     "headers": [
       {
-        "source": "/**",
+        "source": "**",
         "headers": [
           {
             "key": "Cross-Origin-Embedder-Policy",

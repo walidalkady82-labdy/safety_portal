@@ -14,12 +14,12 @@ void registerPlatformRepositories(GetIt sl) {
         return xx;
       },
     );
-    // sl.registerSingletonAsync<IRepoDuplicateDetector>(
-    //   () async
-    //   {
-    //     final xx =  RepoDuplicateDetectorWeb();
-    //     await xx.loadModel();
-    //     return xx;
-    //   },
-    // );
+    sl.registerSingletonAsync<IRepoDuplicateDetector>(
+      () async
+      {
+        final xx =  RepoDuplicateDetectorWeb();
+        await xx.loadModel();
+        return xx;
+      },
+    );
 }

@@ -3,8 +3,6 @@ import 'package:safety_portal/core/logger.dart';
 import 'package:safety_portal/data/repository/i_repo_duplicate_detector.dart';
 import 'package:tflite_web/tflite_web.dart';
 
-IRepoDuplicateDetector createDuplicateDetector() => RepoDuplicateDetectorWeb();
-
 
 class RepoDuplicateDetectorWeb with LogMixin implements IRepoDuplicateDetector {
   TFLiteModel? _model;
@@ -18,13 +16,12 @@ class RepoDuplicateDetectorWeb with LogMixin implements IRepoDuplicateDetector {
     if (_isLoaded) return;
     try {
       logInfo("Web AI duplicate detector: initializing...");
-      //_model = await TFLiteModel.fromUrl('assets/ai/embedding_model.tflite');
-      await TFLiteWeb.initializeUsingCDN();
-      _model = await TFLiteModel.fromUrl("assets/ai/embedding_model.tflite");
+      await TFLiteWeb.initialize();
+      _model = await TFLiteModel.fromUrl("/assets/ai//embedding_model.tflite");
       logInfo("Web AI duplicate detector: ready...");
       _isLoaded = true;
     } catch (e) {
-      logError("Web AI Notice: Embedding WASM failed. Duplicate detection will use direct text matching. : $e");
+      logError("Web AI Notice: Embedding WASM failed. : ${e.toString()}");
       _fallbackActive = true;
       _isLoaded = true;
     }

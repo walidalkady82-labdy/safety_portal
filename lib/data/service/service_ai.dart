@@ -12,7 +12,7 @@ class ServiceAI with LogMixin{
 
   // Use the Switcher classes (which handle the conditional imports)
 final classifier = sl<IRepoHazardClassifier>();
-//final duplicateDetector = sl<IRepoDuplicateDetector>();
+final duplicateDetector = sl<IRepoDuplicateDetector>();
 
 
   Future<Map<String, dynamic>> analyzeFull(String text) async {
@@ -20,12 +20,12 @@ final classifier = sl<IRepoHazardClassifier>();
 
     final results = await Future.wait([
       classifier.predict(text),
-      //duplicateDetector.getEmbedding(text),
+      duplicateDetector.getEmbedding(text),
     ]);
 
     return {
       'classification': results[0] as Map<String, String>,
-      'embedding': null//results[1] as List<double>,
+      'embedding': results[1] as List<double>,
     };
   }
 }
