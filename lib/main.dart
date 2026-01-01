@@ -80,7 +80,7 @@ class MaintenancePortalApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Titan Maintenance Portal',
+      title: 'Titan Safety Portal',
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(

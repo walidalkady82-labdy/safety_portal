@@ -22,7 +22,7 @@ final duplicateDetector = sl<IRepoDuplicateDetector>();
       classifier.predict(text),
       duplicateDetector.getEmbedding(text),
     ]);
-
+    logInfo("'classification': ${results[0]} , 'embedding': ${results[1]}");
     return {
       'classification': results[0] as Map<String, String>,
       'embedding': results[1] as List<double>,
