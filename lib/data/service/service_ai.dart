@@ -15,12 +15,12 @@ final classifier = sl<IRepoHazardClassifier>();
 final duplicateDetector = sl<IRepoDuplicateDetector>();
 
 
-  Future<Map<String, dynamic>> analyzeFull(String text) async {
+  Future<Map<String, dynamic>> analyzeFull(String text, [String? area]) async {
    //if (!_isInitialized) await initAllModels();
 
     final results = await Future.wait([
       classifier.predict(text),
-      duplicateDetector.getEmbedding(text),
+      duplicateDetector.getEmbedding(text, area),
     ]);
     logInfo("'classification': ${results[0]} , 'embedding': ${results[1]}");
     return {

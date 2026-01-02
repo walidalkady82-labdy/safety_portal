@@ -1,6 +1,6 @@
 abstract class IRepoDuplicateDetector {
   Future<void> loadModel();
-  Future<List<double>> getEmbedding(String text);
+  Future<List<double>> getEmbedding(String text, [String? area]);
   double calculateSimilarity(List<double> vecA, List<double> vecB);
   bool get isLoaded;
 }

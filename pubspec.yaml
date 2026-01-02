@@ -45,8 +45,9 @@ flutter:
     - assets/ai/safety_embedding_model.tflite
     - assets/ai/vocab.json
     - assets/ai/labels_hazard.json
-    - assets/ai/labels_electrical_kind.json
+    - assets/ai/labels_elec.json
     - assets/ai/labels_level.json
+    - assets/ai/labels_area.json
     - assets/images/
   fonts:
     - family: Roboto

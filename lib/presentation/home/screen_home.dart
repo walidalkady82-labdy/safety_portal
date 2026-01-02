@@ -208,7 +208,7 @@ class _ScreenHomeState extends State<ScreenHome> {
       
       setState(() => _isAnalyzing = true);
       try {
-        final result = await ServiceAI().analyzeFull(text);
+        final result = await ServiceAI().analyzeFull(text, selectedArea);
         if (!mounted) return;
 
         final classification = result['classification'] as Map<String, String>;
