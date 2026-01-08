@@ -3,6 +3,8 @@ import '../data/repository/i_repo_hazard_classifier.dart';
 import '../data/repository/i_repo_duplicate_detector.dart';
 import '../data/repository/repo_hazard_classifier_web.dart';
 import '../data/repository/repo_duplicate_detector_web.dart';
+import 'data/repository/i_repo_forecaster.dart';
+import 'data/repository/repo_forecaster_web.dart';
 
 /// This file is ONLY compiled on Web (dart:library.html)
 void registerPlatformRepositories(GetIt sl) {
@@ -18,6 +20,14 @@ void registerPlatformRepositories(GetIt sl) {
       () async
       {
         final xx =  RepoDuplicateDetectorWeb();
+        await xx.loadModel();
+        return xx;
+      },
+    );
+    sl.registerSingletonAsync<IRepoForecaster>(
+      () async
+      {
+        final xx =  RepoForecasterWeb();
         await xx.loadModel();
         return xx;
       },

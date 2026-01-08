@@ -1,0 +1,136 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:safety_portal/core/themes.dart';
+
+import '../bloc_home.dart';
+import 'safety_quality_meter.dart';
+
+class ViewReport extends StatefulWidget {
+  const ViewReport({super.key});
+
+  @override
+  State<ViewReport> createState() => _ViewReportState();
+}
+
+class _ViewReportState extends State<ViewReport> {
+  final _obsController = TextEditingController();
+  final _actionController = TextEditingController();
+  String? _selectedArea;
+  String? _selectedLine;
+
+  final List<String> _areas = ["Preheater", "Kiln", "Cooler", "Raw Mill", "Cement Mill", "Packing", "Quarry", "Workshop"];
+  final List<String> _lines = ["Line 1", "Line 2"];
+
+  @override
+  void dispose() {
+    _obsController.dispose();
+    _actionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Watch cubit to disable button when loading
+    final isSubmitting = context.select((CubitHome cubit) {
+     // if (cubit.state == HomeStatus.success) return (cubit.state as HomeLoaded).isSubmitting;
+      return false;
+    });
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("New Observation", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          const Text("AI will automatically classify hazards.", style: TextStyle(color: Colors.grey)),
+          const SizedBox(height: 24),
+
+          // Area & Line Selection
+          Row(
+            children: [
+              Expanded(
+                child: DropdownButtonFormField<String>(
+                  value: _selectedArea,
+                  items: _areas.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                  onChanged: (v) => setState(() => _selectedArea = v),
+                  decoration: const InputDecoration(labelText: "Area", border: OutlineInputBorder()),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: DropdownButtonFormField<String>(
+                  value: _selectedLine,
+                  items: _lines.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                  onChanged: (v) => setState(() => _selectedLine = v),
+                  decoration: const InputDecoration(labelText: "Line", border: OutlineInputBorder()),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Observation Input
+          TextField(
+            controller: _obsController,
+            maxLines: 4,
+            decoration: const InputDecoration(
+              labelText: "Describe the Issue",
+              alignLabelWithHint: true,
+              border: OutlineInputBorder(),
+              hintText: "e.g., Cable hanging loose near the kiln...",
+            ),
+          ),
+          // const SizedBox(height: 16),
+          // SafetyQualityMeter(
+          //     controller: _obsController,
+          //   ),  
+          const SizedBox(height: 16),  
+          // Action Input
+          TextField(
+            controller: _actionController,
+            decoration: const InputDecoration(
+              labelText: "Immediate Action (Optional)",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 32),
+
+          // Submit Button
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: isSubmitting
+                  ? null
+                  : () {
+                      if (_selectedArea == null || _selectedLine == null || _obsController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please fill all required fields")));
+                        return;
+                      }
+
+                      context.read<CubitHome>().handlePreSubmit(
+                        // observation: _obsController.text,
+                        // area: _selectedArea!,
+                        // line: _selectedLine!,
+                        // action: _actionController.text,
+                      );
+                      
+                      // Clear form on submit trigger (Optional, depends on preference)
+                      // _obsController.clear();
+                      // _actionController.clear();
+                    },
+              icon: isSubmitting
+                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                  : const Icon(Icons.send),
+              label: Text(isSubmitting ? "Processing AI..." : "Submit Report"),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

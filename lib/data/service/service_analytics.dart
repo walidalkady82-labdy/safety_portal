@@ -1,262 +1,253 @@
 import 'package:firebase_database/firebase_database.dart';
 
-// --- Data Models ---
-class RiskMetric {
-  final String area;
-  final int reportCount;
-  final double totalRiskScore;
-  final double avgSeverity;
-
-  RiskMetric({
-    required this.area,
-    required this.reportCount,
-    required this.totalRiskScore,
-    required this.avgSeverity,
-  });
-}
-
-class TeamMetric {
-  final String department;
-  final int totalReports;
-  final int closedReports;
-  final int pendingReports;
-  final double totalRiskHandled;
-
-  double get closureRate => totalReports == 0 ? 0.0 : (closedReports / totalReports) * 100;
-
-  TeamMetric({
-    required this.department,
-    required this.totalReports,
-    required this.closedReports,
-    required this.pendingReports,
-    required this.totalRiskHandled,
-  });
-}
-
-class ComparisonMetric {
-  final String label;
-  final double value;
-  ComparisonMetric(this.label, this.value);
-}
-
-class CategoryMetric {
-  final String label;
-  final int count;
-  CategoryMetric(this.label, this.count);
-}
-
-class UserStat {
-  final int totalSubmitted;
-  final int pending;
-  final int closed;
-  final String rank; // e.g., "Top Reporter", "Beginner"
-
-  UserStat(this.totalSubmitted, this.pending, this.closed, this.rank);
-}
-
-// --- Service ---
+import '../model/model_analitcs_summery.dart';
+import '../model/model_department_metric.dart';
+import '../model/model_risk_metric.dart';
+import '../model/model_user_stats.dart';
 
 class ServiceAnalytics {
-  // Risk Weights
-  final Map<String, int> levelWeights = {
-    'low': 1,
-    'medium': 3,
-    'high': 5,
-    'critical': 10,
+  // Weights matching the training logic
+  final Map<String, int> levelWeights = {'low': 1, 'medium': 3, 'high': 5};
+  final Map<String, int> typeWeights = {
+    'unsafe_condition': 1,
+    'unsafe_behavior': 2,
+    'nm': 5,
+    'fa': 10
   };
 
-  /// Main method to fetch all analytics data at once
-  Future<Map<String, dynamic>> getFullDashboardData(String? currentUserId) async {
+  // Simple In-Memory Cache
+  ModelAnalyticsSummary? _cachedSummary;
+  DateTime? _lastFetch;
+  final Duration _cacheDuration = const Duration(minutes: 5);
+  
+  Future<ModelAnalyticsSummary> getUnifiedAnalytics({int? limit}) async {
+    if (_cachedSummary != null &&
+        _lastFetch != null &&
+        DateTime.now().difference(_lastFetch!) < _cacheDuration) {
+      return _cachedSummary!;
+    }
+
+    final rawData = await _fetchRawData(limit);
+    if (rawData.isEmpty) return _emptySummary();
+
+    _cachedSummary = _processRawData(rawData);
+    _lastFetch = DateTime.now();
+    return _cachedSummary!;
+  }
+
+  Future<List<ModelRiskMetric>> getAreaRiskMetrics({int? limit}) async {
+    final rawData = await _fetchRawData(limit);
+    if (rawData.isEmpty) return [];
+    return _processAreaRisks(rawData);
+  }
+
+  Future<List<ModelDepartmentMetric>> getDepartmentMetrics(
+      {int? limit}) async {
+    final rawData = await _fetchRawData(limit);
+    if (rawData.isEmpty) return [];
+    return _processDepartmentMetrics(rawData);
+  }
+
+  Future<List<ModelUserStats>> getLeaderboard({int? limit, int count = 10}) async {
+    final rawData = await _fetchRawData(limit);
+    if (rawData.isEmpty) return [];
+    return _processLeaderboard(rawData, count: count);
+  }
+
+  ModelAnalyticsSummary _processRawData(Map<dynamic, dynamic> rawData) {
+    final areaRisks = _processAreaRisks(rawData);
+    final deptMetrics = _processDepartmentMetrics(rawData);
+    final leaderboard = _processLeaderboard(rawData);
+
+    return ModelAnalyticsSummary(
+      areaRisks: areaRisks,
+      deptMetrics: deptMetrics,
+      leaderboard: leaderboard,
+      totalReports: rawData.length,
+      timestamp: DateTime.now(),
+    );
+  }
+
+  List<ModelRiskMetric> _processAreaRisks(Map<dynamic, dynamic> rawData) {
+    Map<String, _AreaAggregator> areas = {};
+
+    rawData.forEach((key, value) {
+      if (value == null || value is! Map) return;
+      final r = value;
+      String area = (r['area'] ?? 'Unknown').toString();
+      double score = _calculateScore(r);
+      if (!areas.containsKey(area)) areas[area] = _AreaAggregator();
+      areas[area]!.add(score);
+    });
+
+    List<ModelRiskMetric> areaRisks = [];
+    areas.forEach((k, v) {
+      areaRisks.add(ModelRiskMetric(
+        area: k,
+        reportCount: v.count,
+        totalRiskScore: v.totalRisk,
+        avgSeverity: v.count == 0 ? 0 : v.totalRisk / v.count,
+      ));
+    });
+
+    areaRisks.sort((a, b) => b.totalRiskScore.compareTo(a.totalRiskScore));
+    return areaRisks;
+  }
+
+  List<ModelDepartmentMetric> _processDepartmentMetrics(
+      Map<dynamic, dynamic> rawData) {
+    Map<String, _TeamAggregator> teams = {};
+
+    rawData.forEach((key, value) {
+      if (value == null || value is! Map) return;
+      final r = value;
+      String dept = (r['respDepartment'] ?? 'Unassigned').toString();
+      String status = (r['status'] ?? 'pending').toString().toLowerCase();
+      double score = _calculateScore(r);
+      if (!teams.containsKey(dept)) teams[dept] = _TeamAggregator();
+      teams[dept]!.add(status == 'closed', score);
+    });
+
+    List<ModelDepartmentMetric> deptMetrics = [];
+    teams.forEach((k, v) {
+      deptMetrics.add(ModelDepartmentMetric(
+        name: k,
+        pending: v.pending,
+        closed: v.closed,
+        totalRisk: v.totalRisk,
+      ));
+    });
+
+    return deptMetrics;
+  }
+
+  List<ModelUserStats> _processLeaderboard(Map<dynamic, dynamic> rawData, {int count = 10}) {
+    Map<String, int> userCounts = {};
+
+    rawData.forEach((key, value) {
+      if (value == null || value is! Map) return;
+      final r = value;
+      String reporter = (r['reporter'] ?? 'Anonymous').toString();
+      userCounts[reporter] = (userCounts[reporter] ?? 0) + 1;
+    });
+
+    List<ModelUserStats> leaderboard = [];
+    userCounts.forEach((k, v) {
+      leaderboard.add(ModelUserStats(email: k, reportCount: v));
+    });
+
+    leaderboard.sort((a, b) => b.reportCount.compareTo(a.reportCount));
+    return leaderboard.take(count).toList();
+  }
+  
+  TrendAnalysis getTrendAnalysis(
+      String areaName,
+      List<double> history,
+      double prediction,
+  ) {
+    return TrendAnalysis(
+      areaName,
+      history,
+      prediction,
+    );
+  }
+  // --- HELPERS ---
+
+  ModelAnalyticsSummary _emptySummary() {
+    return ModelAnalyticsSummary(
+      areaRisks: [],
+      deptMetrics: [],
+      leaderboard: [],
+      totalReports: 0,
+      timestamp: DateTime.now(),
+    );
+  }
+
+  Future<Map<dynamic, dynamic>> _fetchRawData(int? limit) async {
     try {
-      final snapshot = await FirebaseDatabase.instance.ref('atr').get();
+      Query query = FirebaseDatabase.instance.ref('atr');
+      if (limit != null) {
+        query = query.limitToLast(limit);
+      }
+      
+      final snapshot = await query.get();
       if (!snapshot.exists) return {};
 
-      // 1. Robust Data Normalization
-      final rawValue = snapshot.value;
-      Map<dynamic, dynamic> normalizedData = {};
-
-      if (rawValue is Map) {
-        normalizedData = rawValue;
-      } else if (rawValue is List) {
-        for (int i = 0; i < rawValue.length; i++) {
-          if (rawValue[i] != null) {
-            normalizedData[i.toString()] = rawValue[i];
+      final val = snapshot.value;
+      
+      // Handle Firebase returning a List (common if keys are integers)
+      if (val is List) {
+        Map<dynamic, dynamic> map = {};
+        for (int i = 0; i < val.length; i++) {
+          if (val[i] != null) {
+            map[i.toString()] = val[i];
           }
         }
+        return map;
+      }
+      
+      // Handle standard Map
+      if (val is Map) {
+        return val;
       }
 
-      print("Analytics: Processed ${normalizedData.length} records.");
-
-      return {
-        'areaRisks': _calculateAreaRisks(normalizedData),
-        'teamPerformance': _calculateTeamPerformance(normalizedData),
-        'monthlyTrend': _calculateMonthlyTrend(normalizedData),
-        
-        // New Analytics
-        'typeBreakdown': _calculateBreakdown(normalizedData, 'type'),
-        'hazardBreakdown': _calculateBreakdown(normalizedData, 'hazard_kind'),
-        'electricalBreakdown': _calculateBreakdown(normalizedData, 'electrical_kind'),
-        'levelBreakdown': _calculateBreakdown(normalizedData, 'level'),
-        'userStats': _calculateUserStats(normalizedData, currentUserId),
-        'existingVectors': _extractVectorsForDupCheck(normalizedData),
-      };
+      return {};
     } catch (e) {
-      print("Analytics Critical Error: $e");
+      print("Analytics Fetch Error: $e");
       return {};
     }
   }
 
-  // --- Helper: Generic Breakdown Calculator ---
-  List<CategoryMetric> _calculateBreakdown(Map<dynamic, dynamic> data, String fieldKey) {
-    Map<String, int> counts = {};
-    data.forEach((key, value) {
-      if (value is! Map) return;
-      String label = (value[fieldKey] ?? 'Unknown').toString();
-      // Clean up common variations if needed
-      if (label.isEmpty) label = 'Unknown';
-      counts[label] = (counts[label] ?? 0) + 1;
-    });
-
-    List<CategoryMetric> result = [];
-    counts.forEach((k, v) => result.add(CategoryMetric(k, v)));
-    result.sort((a, b) => b.count.compareTo(a.count)); // Sort Descending
-    return result;
+  double _calculateScore(dynamic report) {
+    if (report == null || report is! Map) return 0.0;
+    
+    String level = (report['level'] ?? 'low').toString().toLowerCase().trim();
+    String type = (report['type'] ?? 'unsafe_condition').toString().toLowerCase().trim();
+    
+    int lWeight = levelWeights[level] ?? 1;
+    int tWeight = typeWeights[type] ?? 1;
+    
+    return (lWeight * tWeight).toDouble();
   }
-
-  // --- Helper: User Stats ---
-  UserStat _calculateUserStats(Map<dynamic, dynamic> data, String? userId) {
-    if (userId == null) return UserStat(0, 0, 0, "Guest");
-
-    int total = 0;
-    int pending = 0;
-    int closed = 0;
-
-    data.forEach((key, value) {
-      if (value is! Map) return;
-      
-      // Check if this report belongs to the user (by email or ID depending on your storage)
-      // Assuming 'reporter' stores email, we might need to match vaguely if userId is passed as UID
-      // For this example, let's assume 'reporter' field holds the email and we filter client-side 
-      // OR we just count everything if we can't match. 
-      // Ideally: if (value['uid'] == userId) ...
-      
-      // Since we stored 'reporter' as email in previous files, we can't strictly match UID without user email.
-      // We will count stats for *ALL* records here as a "Global View" if userId match fails, 
-      // OR you must pass the user's email to this function instead of UID.
-      // Let's assume the UI passes the email for accurate matching.
-      String reporter = (value['reporter'] ?? '').toString();
-      if (reporter == userId) { // userId here should be the email passed from UI
-        total++;
-        String status = (value['status'] ?? 'Pending').toString().toLowerCase();
-        if (status.contains('closed') || status.contains('done')) {
-          closed++;
-        } else {
-          pending++;
-        }
-      }
-    });
-
-    String rank = "Beginner";
-    if (total > 5) rank = "Observer";
-    if (total > 15) rank = "Safety Scout";
-    if (total > 50) rank = "Guardian";
-
-    return UserStat(total, pending, closed, rank);
-  }
-
-  // --- Helper: Extract Vectors for Duplicate Detection ---
-  List<Map<String, dynamic>> _extractVectorsForDupCheck(Map<dynamic, dynamic> data) {
-    List<Map<String, dynamic>> vectors = [];
-    data.forEach((key, value) {
-      if (value is! Map) return;
-      if (value['vector'] != null && value['observationOrIssueOrHazard'] != null) {
-        try {
-          // Handle dynamic list conversion safely
-          List<dynamic> rawVec = value['vector'] is List ? value['vector'] : [];
-          if (rawVec.isNotEmpty) {
-             vectors.add({
-               'id': key,
-               'text': value['observationOrIssueOrHazard'].toString(),
-               'vector': rawVec.map((e) => (e as num).toDouble()).toList(),
-             });
-          }
-        } catch (e) {
-          // ignore malformed vectors
-        }
-      }
-    });
-    return vectors;
-  }
-
-  // --- Existing Calculators (Preserved) ---
   
-  List<RiskMetric> _calculateAreaRisks(Map<dynamic, dynamic> data) {
-    Map<String, List<double>> areaScores = {};
-    data.forEach((key, value) {
-      if (value is! Map) return;
-      String area = (value['area'] ?? 'Unknown').toString();
-      String level = (value['level'] ?? 'low').toString().toLowerCase().trim();
-      int lWeight = levelWeights[level] ?? 1;
-      if (!areaScores.containsKey(area)) areaScores[area] = [];
-      areaScores[area]!.add(lWeight.toDouble());
-    });
+}
 
-    List<RiskMetric> metrics = [];
-    areaScores.forEach((area, scores) {
-      double total = scores.fold(0.0, (sum, item) => sum + item);
-      metrics.add(RiskMetric(
-        area: area,
-        reportCount: scores.length,
-        totalRiskScore: total,
-        avgSeverity: scores.isEmpty ? 0 : total / scores.length,
-      ));
-    });
-    metrics.sort((a, b) => b.totalRiskScore.compareTo(a.totalRiskScore));
-    return metrics;
+// Internal helper to keep counts before converting to final classes
+class _TeamAggregator {
+  int closed = 0;
+  int pending = 0;
+  double totalRisk = 0.0;
+
+  void add(bool isClosed, double risk) {
+    if (isClosed) closed++; else pending++;
+    totalRisk += risk;
+  }
+}
+
+class _AreaAggregator {
+  int count = 0;
+  double totalRisk = 0.0;
+
+  void add(double risk) {
+    count++;
+    totalRisk += risk;
+  }
+}
+
+class TrendAnalysis {
+  final String areaName;
+  final List<double> history; // Last 4 weeks
+  final double prediction;    // Next week (AI Forecast)
+
+  TrendAnalysis(this.areaName, this.history, this.prediction);
+
+  // Is the risk going up or down?
+  double get trendPercentage {
+    if (history.isEmpty) return 0.0;
+    double averageHistory = history.reduce((a, b) => a + b) / history.length;
+    if (averageHistory == 0) return prediction > 0 ? 100.0 : 0.0;
+    return ((prediction - averageHistory) / averageHistory) * 100;
   }
 
-  List<TeamMetric> _calculateTeamPerformance(Map<dynamic, dynamic> data) {
-    Map<String, Map<String, dynamic>> teamStats = {};
-    data.forEach((key, value) {
-       if (value is! Map) return;
-       String dept = (value['respDepartment'] ?? 'General').toString();
-       String status = (value['status'] ?? 'Pending').toString().toLowerCase();
-       if (!teamStats.containsKey(dept)) teamStats[dept] = {'total': 0, 'closed': 0, 'pending': 0, 'risk': 0.0};
-       teamStats[dept]!['total'] += 1;
-       if (status.contains('closed') || status.contains('done')) {
-         teamStats[dept]!['closed'] += 1;
-       } else {
-         teamStats[dept]!['pending'] += 1;
-       }
-    });
-    List<TeamMetric> metrics = [];
-    teamStats.forEach((dept, stats) {
-      metrics.add(TeamMetric(
-        department: dept,
-        totalReports: stats['total'],
-        closedReports: stats['closed'],
-        pendingReports: stats['pending'],
-        totalRiskHandled: stats['risk'],
-      ));
-    });
-    metrics.sort((a, b) => b.closureRate.compareTo(a.closureRate));
-    return metrics;
-  }
-
-  List<ComparisonMetric> _calculateMonthlyTrend(Map<dynamic, dynamic> data) {
-    Map<String, int> counts = {};
-    data.forEach((key, value) {
-      if (value is! Map) return;
-      if (value['issueDate'] != null) {
-        try {
-          DateTime date = DateTime.parse(value['issueDate']);
-          String k = "${date.month}/${date.year}";
-          counts[k] = (counts[k] ?? 0) + 1;
-        } catch (_) {}
-      }
-    });
-    List<ComparisonMetric> trend = [];
-    counts.forEach((k, v) => trend.add(ComparisonMetric(k, v.toDouble())));
-    return trend;
-  }
+  bool get isCritical => trendPercentage > 20.0 && prediction > 2.0; // Rising >20% & significant count
 }

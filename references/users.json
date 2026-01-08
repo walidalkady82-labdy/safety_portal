@@ -1,0 +1,2873 @@
+{
+  "user_1007": {
+    "code": 1007,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "خيري محمد مظهر جمعة",
+    "nameEn": "Khayree Mohamed Mazhr Gomaa",
+    "position": "Administration Section Head"
+  },
+  "user_1012": {
+    "code": 1012,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "ياسر عبد الله محمود الجندي",
+    "nameEn": "Yasser Abd Alahha Mahmoud El Gendy",
+    "position": "Automation Section Head"
+  },
+  "user_1014": {
+    "code": 1014,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد مدحت صديق سعد",
+    "nameEn": "Mohamed Medhat Sediek Saad",
+    "position": "Senior Production Engineer"
+  },
+  "user_1018": {
+    "code": 1018,
+    "company": "Titan",
+    "department": "Environment",
+    "email": "",
+    "nameAr": "وليد سيد حسن مصطفى",
+    "nameEn": "Walid Sayed Hassan Mostafa",
+    "position": "Environmental Manager"
+  },
+  "user_1020": {
+    "code": 1020,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد مجدي سعد زغلول",
+    "nameEn": "Mohamed Magdy Saad Zaghlol",
+    "position": "Mechanical Section Head"
+  },
+  "user_1022": {
+    "code": 1022,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "أحمد طه أبو سريع طه",
+    "nameEn": "Ahmed Taha Abo Sreaa Taha",
+    "position": "Lubrication Engineer"
+  },
+  "user_1023": {
+    "code": 1023,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "شريف أحمد الحسيني نجيب احمد",
+    "nameEn": "Sheirf Ahmed El Husseiny Nagieb Ahmed",
+    "position": "Senior Planning Engineer"
+  },
+  "user_1033": {
+    "code": 1033,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "شريف طارق مصطفى محمد",
+    "nameEn": "Sherif Tarek Mostafa Mohamed",
+    "position": "Shift Leader"
+  },
+  "user_1034": {
+    "code": 1034,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "محمد كمال محمد درويش علي",
+    "nameEn": "Mohamed Kamal Mohamed Darwiesh Aly",
+    "position": "Senior Lab Chemist"
+  },
+  "user_1044": {
+    "code": 1044,
+    "company": "Titan",
+    "department": "Finance",
+    "email": "",
+    "nameAr": "أحمد عبد الحكيم حافظ",
+    "nameEn": "Ahmed A.Hakim Hafez",
+    "position": "Senior Accountant"
+  },
+  "user_1056": {
+    "code": 1056,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "احمد مختار ابراهيم",
+    "nameEn": "Ahmed Mokhtar Ibrhaim",
+    "position": "Electrical Engineer"
+  },
+  "user_1058": {
+    "code": 1058,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد عبد الفتح محمدى خضر",
+    "nameEn": "Mohamed Abd EL Fatha Mohammedy Khedr",
+    "position": "Productoin Engineer"
+  },
+  "user_1059": {
+    "code": 1059,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "أحمد محمد عبد العاطي عبد الحافظ",
+    "nameEn": "Ahmed Mohamed Abd El Aty Abd El Hafez",
+    "position": "Cement Mill Operator"
+  },
+  "user_1060": {
+    "code": 1060,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "بشير عبد الغني علي عبد الغني",
+    "nameEn": "Beshir Abd El Ghani Ali Abd El Gahni",
+    "position": "Raw Mill Operator"
+  },
+  "user_1061": {
+    "code": 1061,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "عيد محمد عبد الخالق محمد",
+    "nameEn": "Eid Mohamed Abd El Khalek Mohamed",
+    "position": "kiln Patrolar"
+  },
+  "user_1062": {
+    "code": 1062,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد جمال فضل عبد القادر",
+    "nameEn": "Mohamed Gamal Fadel Abd El Qader",
+    "position": "Raw Mill Operator"
+  },
+  "user_1063": {
+    "code": 1063,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد كردي محمد اسماعيل",
+    "nameEn": "Mohamed Kordy Mohamed Ismail",
+    "position": "kiln Patrolar"
+  },
+  "user_1064": {
+    "code": 1064,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "أيمن محمد التهامي محمد",
+    "nameEn": "Ayamn Mohamed EL Touhamy Mohamed",
+    "position": "Instrumentation Technician"
+  },
+  "user_1065": {
+    "code": 1065,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمود عبد السلام أحمد حافظ",
+    "nameEn": "Mahmoud Abdelsalam Ahmed Hafez",
+    "position": "Cement Mill & Packing Technician"
+  },
+  "user_1066": {
+    "code": 1066,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "شعبان رشيد غلاب أيوب",
+    "nameEn": "Shaban Rashid Ghallab Ayoub",
+    "position": "Raw Mill Technician"
+  },
+  "user_1067": {
+    "code": 1067,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "أحمد فرج عبد الحميد عبد المحسن",
+    "nameEn": "Ahmed Farag Abd El Hamid Abd EL Mohsen",
+    "position": "Process Technician"
+  },
+  "user_1068": {
+    "code": 1068,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "مصطفى علي عويس مصطفى",
+    "nameEn": "Mostafa Ali Ewiss Mostafa",
+    "position": "Instrumentation Technician"
+  },
+  "user_1069": {
+    "code": 1069,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "عمرو علي حسن زيد",
+    "nameEn": "Amr Ali Hassan Zaied",
+    "position": "Electrical Power Technician"
+  },
+  "user_107": {
+    "code": 107,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "سيد زكي عيساوي أحمد",
+    "nameEn": "Sayed Zaky Essawy Ahmed",
+    "position": "Snr. Electrician"
+  },
+  "user_1070": {
+    "code": 1070,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "أشرف محمد عبد العاطي عبد الحافظ",
+    "nameEn": "Ashraf Mohamed Abd El Aty Abd El Hafez",
+    "position": "Electrical Power shift Technician"
+  },
+  "user_1071": {
+    "code": 1071,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "محمد ابراهيم محمد حسن",
+    "nameEn": "Mohamed Ibrhaim Mohamed Hassan",
+    "position": "Electrical Power shift Technician"
+  },
+  "user_1072": {
+    "code": 1072,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "عبد الرحمن نور الدين وهبة أحمد",
+    "nameEn": "Abd El Rahaman NorEl Din Wahaba Ahmed",
+    "position": "Electrical Power Technician"
+  },
+  "user_1073": {
+    "code": 1073,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "طه حسين خليل محمد",
+    "nameEn": "Taha Hussein Khalil Mohamed",
+    "position": "Electrical Power shift Technician"
+  },
+  "user_1074": {
+    "code": 1074,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "أحمد علي عرفة عبد العليم",
+    "nameEn": "Ahmed Ali Arafa Abd El Alim",
+    "position": "Instrumentation Technician"
+  },
+  "user_1075": {
+    "code": 1075,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "أحمد محمد محمد البهنساوي",
+    "nameEn": "Ahmed Mohamed Mohamed Bahnasawy",
+    "position": "Raw Mills & Quarries Technician"
+  },
+  "user_1076": {
+    "code": 1076,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد عاطف محمد عبد الرازق",
+    "nameEn": "Mohamed Atef Mohamed Abd EL Razek",
+    "position": "Kiln Technician"
+  },
+  "user_1082": {
+    "code": 1082,
+    "company": "Titan",
+    "department": "Finance",
+    "email": "",
+    "nameAr": "منير علي منير",
+    "nameEn": "Mounir Ali Mounir",
+    "position": "Accountant"
+  },
+  "user_1083": {
+    "code": 1083,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "حسام ماجد حسن",
+    "nameEn": "Hossam Maged Hassan",
+    "position": "Mechanical Engineer"
+  },
+  "user_1084": {
+    "code": 1084,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "حسام نادي محمد",
+    "nameEn": "Hossam Nady Mohamed",
+    "position": "planning Engineer"
+  },
+  "user_1085": {
+    "code": 1085,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "محمد عاشور محمود",
+    "nameEn": "Mohamed Ashour Mahmoud",
+    "position": "Senior Inspection Engineer"
+  },
+  "user_1086": {
+    "code": 1086,
+    "company": "Titan",
+    "department": "Stores",
+    "email": "",
+    "nameAr": "وائل أحمد سيد أ. فتح",
+    "nameEn": "Wael Ahmed Sayed A. Fatah",
+    "position": "Store Keeper"
+  },
+  "user_1088": {
+    "code": 1088,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "فؤاد محمد محمد ابراهيم",
+    "nameEn": "FOUAD M. M. IBRAHIM",
+    "position": "Cement Mills patroller"
+  },
+  "user_1089": {
+    "code": 1089,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "فتحي يونس عبد الله محمد",
+    "nameEn": "FATHY YOUNES ABDALLA MOHAMED",
+    "position": "Raw mills patroller"
+  },
+  "user_1090": {
+    "code": 1090,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "حسين عامر م. علي",
+    "nameEn": "HUSSIEN AMER M. ALI",
+    "position": "Solid fuel mill / kiln patroller"
+  },
+  "user_1091": {
+    "code": 1091,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "أحمد عبد المنعم صابر إياد",
+    "nameEn": "Ahmed Abdel Moniem Saber Eiad",
+    "position": "Solid fuel mill / kiln patroller"
+  },
+  "user_1092": {
+    "code": 1092,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "عرفة عيد محمد أحمد",
+    "nameEn": "Arfa Eid Mohamed Ahmed",
+    "position": "Cement mills operator"
+  },
+  "user_1093": {
+    "code": 1093,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "حسين محمد حسين محمد",
+    "nameEn": "Husien Mohamed Husien Mohamed",
+    "position": "Packing operator"
+  },
+  "user_1094": {
+    "code": 1094,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد عباس محمد عبدالله",
+    "nameEn": "Mohamed Abaas Mohamed Abdalla",
+    "position": "Solid fuel mill / kiln patroller"
+  },
+  "user_1095": {
+    "code": 1095,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد صابر حلفايا مصطفى",
+    "nameEn": "Mohamed Saber Helfaya Moustafa",
+    "position": "Solid fuel mill / kiln patroller"
+  },
+  "user_1096": {
+    "code": 1096,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "أسامة أحمد محمد أحمد",
+    "nameEn": "Osama Ahmed Mohamed Ahmed",
+    "position": "Packing operator"
+  },
+  "user_1097": {
+    "code": 1097,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "زاهر يحيى ابراهيم محمود",
+    "nameEn": "Zaher Yahia Ibrahim Mahmoud",
+    "position": "Driver"
+  },
+  "user_1098": {
+    "code": 1098,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "فرج محمد فرج",
+    "nameEn": "Farg Mohamed Farg",
+    "position": "Operator"
+  },
+  "user_1099": {
+    "code": 1099,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "ابراهيم عطية ابراهيم عبد اللطيف",
+    "nameEn": "Ibrahim Attia Ibrahim Abdel Latif",
+    "position": "Technician"
+  },
+  "user_1100": {
+    "code": 1100,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد ممدوح عبد إيلاتي",
+    "nameEn": "Mohamed Mamdoh Abd Elaty",
+    "position": "Technician"
+  },
+  "user_1101": {
+    "code": 1101,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "عمرو سامي محمد",
+    "nameEn": "Amr Samy Mohamed",
+    "position": "Technician"
+  },
+  "user_1102": {
+    "code": 1102,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "أحمد راشد راشد عبد العظيم",
+    "nameEn": "Ahmed Rashed Rashed Abd El Azim",
+    "position": "Technician"
+  },
+  "user_1103": {
+    "code": 1103,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "أحمد رفعت رجائي",
+    "nameEn": "Ahmed Refaat Ragaay",
+    "position": "Technician"
+  },
+  "user_1104": {
+    "code": 1104,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد منجد أحمد",
+    "nameEn": "Mohamed Monged Ahmed",
+    "position": "Technician"
+  },
+  "user_1105": {
+    "code": 1105,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "محمد خالد محمد حسين",
+    "nameEn": "Mohamed Khaled Mohamed Hussein",
+    "position": "Senior Inspection Engineer"
+  },
+  "user_1109": {
+    "code": 1109,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد على محمود عبد الوهاب",
+    "nameEn": "Mohamed Ali Mahmoud Abd EL Wahab",
+    "position": "Mechnical Engineer"
+  },
+  "user_1112": {
+    "code": 1112,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "أحمد محمد مختار",
+    "nameEn": "Ahmed Mohamed Mokhtar",
+    "position": "Mechanical Manager"
+  },
+  "user_116": {
+    "code": 116,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "حمد ماهر محمد صبري",
+    "nameEn": "Hamad Maher Mohamed Sabry",
+    "position": "Quality Control Snr. Technician"
+  },
+  "user_119": {
+    "code": 119,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "علاء فوزي محمد عطوة",
+    "nameEn": "Alaa Fawzy Mohamed Atwa",
+    "position": "Snr. Production Technician"
+  },
+  "user_122": {
+    "code": 122,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "طه محمود حسن أبو بكر",
+    "nameEn": "Taha Mahmoud Hassan Abou Bakr",
+    "position": "Physical Lab Snr. Technician"
+  },
+  "user_123": {
+    "code": 123,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "أحمد خليل صالح خليل",
+    "nameEn": "Ahmed Khalil Saleh Khalil",
+    "position": "Physical Lab. Foreman"
+  },
+  "user_124": {
+    "code": 124,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "ايهاب رمضان سعد محمد",
+    "nameEn": "Ihab Ramadan Saad Mohamed",
+    "position": "Quality Control Snr. Technician"
+  },
+  "user_130": {
+    "code": 130,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "خلف على سيد محمد",
+    "nameEn": "Khalaf Aly Sayed Mohamed",
+    "position": "Quality Control Snr. Technician"
+  },
+  "user_131": {
+    "code": 131,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمود محفوظ عبد الله عبد الله",
+    "nameEn": "Mahmoud Mahfouz A.Allah A.Allah",
+    "position": "Kiln Forman"
+  },
+  "user_165": {
+    "code": 165,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "حمدي سيد زيدان صبره",
+    "nameEn": "Hamdy Sayed Zeidan Sabra",
+    "position": "Kiln Operator"
+  },
+  "user_166": {
+    "code": 166,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "ماجد موريس وهبة حنا",
+    "nameEn": "Magued Moris Wahba Hanna",
+    "position": "Crusher Operator"
+  },
+  "user_173": {
+    "code": 173,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "علاء الدين عبد الرحيم محمد أحمد",
+    "nameEn": "Alaa ElDin A.Rehim Mohamed Ahmed",
+    "position": "Kiln Operator"
+  },
+  "user_175": {
+    "code": 175,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "أحمد محمد علي محمد",
+    "nameEn": "Ahmed Mohamed Aly Mohamed",
+    "position": "Snr. Production Technician"
+  },
+  "user_185": {
+    "code": 185,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "عبد الرحمن عبد المنعم أحمد",
+    "nameEn": "A.Rahman A.Moneim Ahmed",
+    "position": "Snr. Fitter"
+  },
+  "user_186": {
+    "code": 186,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "محمد حسين ابوالقاسم جاد المولى",
+    "nameEn": "Mohamed Hussein Abou ElKassem Gad ElMawla",
+    "position": "Snr. Electrician"
+  },
+  "user_199": {
+    "code": 199,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد عبد السلام أحمد حافظ",
+    "nameEn": "Mohamed A.Salam Ahmed Hafez",
+    "position": "Raw Material Weigh Bridge Operator"
+  },
+  "user_2004": {
+    "code": 2004,
+    "company": "Igess",
+    "department": "PM",
+    "email": "",
+    "nameAr": "طارق هشام متولى",
+    "nameEn": "Tarek Hesham Metwally",
+    "position": "Technician"
+  },
+  "user_2005": {
+    "code": 2005,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "على حسانين سليمان",
+    "nameEn": "Ali Hassanein Suleiman",
+    "position": "Technician"
+  },
+  "user_2006": {
+    "code": 2006,
+    "company": "Igess",
+    "department": "PM",
+    "email": "",
+    "nameAr": "محمود احمد عبد العظيم",
+    "nameEn": "Mahmoud Ahmed Abdel-Azim",
+    "position": "Technician"
+  },
+  "user_2007": {
+    "code": 2007,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "محمود نجم الدين محمد",
+    "nameEn": "Mahmoud Najm El-Din Mohamed",
+    "position": "Technician"
+  },
+  "user_2008": {
+    "code": 2008,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "محمد مصطفى محمد",
+    "nameEn": "Mohamed Mustafa Mohamed",
+    "position": "Technician"
+  },
+  "user_2009": {
+    "code": 2009,
+    "company": "Igess",
+    "department": "PM",
+    "email": "",
+    "nameAr": "محمد محسن مبروك",
+    "nameEn": "Mohamed Mohsen Mabrouk",
+    "position": "Technician"
+  },
+  "user_2010": {
+    "code": 2010,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "مبروك جابر",
+    "nameEn": "Mabrouk Jaber",
+    "position": "worker"
+  },
+  "user_2011": {
+    "code": 2011,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "احمد سعد محمد",
+    "nameEn": "Ahmed Saad Mohammed",
+    "position": "worker"
+  },
+  "user_2012": {
+    "code": 2012,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "احمد جمال جمعه",
+    "nameEn": "Ahmed Gamal Juma",
+    "position": "worker"
+  },
+  "user_2013": {
+    "code": 2013,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "احمد سيد ابو سيف",
+    "nameEn": "Ahmed Sayed Abou Seif",
+    "position": "worker"
+  },
+  "user_2014": {
+    "code": 2014,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "احمد عبد الله احمد",
+    "nameEn": "Ahmed Abdullah Ahmed",
+    "position": "worker"
+  },
+  "user_2015": {
+    "code": 2015,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "اسامه رافت",
+    "nameEn": "Osama Raafat",
+    "position": "worker"
+  },
+  "user_2016": {
+    "code": 2016,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "اشرف طه محمد",
+    "nameEn": "Ashraf Taha Mohammed",
+    "position": "worker"
+  },
+  "user_2017": {
+    "code": 2017,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "بريك سلطان بريك",
+    "nameEn": "Break Sultan Break",
+    "position": "worker"
+  },
+  "user_2018": {
+    "code": 2018,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "عويس محمد سمير",
+    "nameEn": "Eweis Mohammed Samir",
+    "position": "worker"
+  },
+  "user_2019": {
+    "code": 2019,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "حجاج على سيد",
+    "nameEn": "Hajjaj Ali Sayed",
+    "position": "worker"
+  },
+  "user_202": {
+    "code": 202,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "أشرف ماهر أحمد محمود",
+    "nameEn": "Ashraf Maher Ahmed Mahmoud",
+    "position": "Raw Material Pre Blending Foreman"
+  },
+  "user_2020": {
+    "code": 2020,
+    "company": "Samaras",
+    "department": "Production",
+    "email": "",
+    "nameAr": "حسين محمد على",
+    "nameEn": "Hussein Mohammed Ali",
+    "position": "Safety Technician"
+  },
+  "user_2021": {
+    "code": 2021,
+    "company": "Samaras",
+    "department": "Production",
+    "email": "",
+    "nameAr": "خالد كامل",
+    "nameEn": "Khaled Kamel",
+    "position": "Safety Technician"
+  },
+  "user_2022": {
+    "code": 2022,
+    "company": "Igess",
+    "department": "PM",
+    "email": "",
+    "nameAr": "محمود على عبد التواب",
+    "nameEn": "Mahmoud Ali Abdel Tawab",
+    "position": "Technician"
+  },
+  "user_2023": {
+    "code": 2023,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "جلال على سيد",
+    "nameEn": "Jalal Ali Sayed",
+    "position": "worker"
+  },
+  "user_2024": {
+    "code": 2024,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "طلال رمضان محمود",
+    "nameEn": "Talal Ramadan Mahmoud",
+    "position": "worker"
+  },
+  "user_2025": {
+    "code": 2025,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "سيد عبد الحميد",
+    "nameEn": "Sayed Abdul Hamid",
+    "position": "worker"
+  },
+  "user_2026": {
+    "code": 2026,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "شعبان نور",
+    "nameEn": "Shaaban Nour",
+    "position": "worker"
+  },
+  "user_2027": {
+    "code": 2027,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "عبد الله الغرباوى",
+    "nameEn": "Abdullah Al-Gharbawi",
+    "position": "worker"
+  },
+  "user_2028": {
+    "code": 2028,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "عزت بكرى",
+    "nameEn": "Ezzat Bakri",
+    "position": "worker"
+  },
+  "user_2029": {
+    "code": 2029,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد ربيع بكرى",
+    "nameEn": "Mohamed Rabie Bakri",
+    "position": "worker"
+  },
+  "user_203": {
+    "code": 203,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "ماهر عبد الحميد أحمد جنيدي",
+    "nameEn": "Maher A.Hamid Ahmed Gueneidy",
+    "position": "Snr. Production Technician"
+  },
+  "user_2030": {
+    "code": 2030,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "فؤاد محمد ابراهيم",
+    "nameEn": "Fouad Mohammed Ibrahim",
+    "position": "worker"
+  },
+  "user_2031": {
+    "code": 2031,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد سعيد محمد معبد",
+    "nameEn": "Mohammed Saeed Mohammed Maabad",
+    "position": "worker"
+  },
+  "user_2032": {
+    "code": 2032,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "هشام كيلانى",
+    "nameEn": "Hisham Kilani",
+    "position": "worker"
+  },
+  "user_2033": {
+    "code": 2033,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "مصطفى رمضان",
+    "nameEn": "Mustafa Ramadan",
+    "position": "worker"
+  },
+  "user_2034": {
+    "code": 2034,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "مصطفى مختار",
+    "nameEn": "Mustafa Mukhtar",
+    "position": "worker"
+  },
+  "user_2035": {
+    "code": 2035,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمود جمال جمعه",
+    "nameEn": "Mahmoud Gamal Juma",
+    "position": "worker"
+  },
+  "user_2036": {
+    "code": 2036,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمود سليمان",
+    "nameEn": "Mahmoud Suleiman",
+    "position": "worker"
+  },
+  "user_2037": {
+    "code": 2037,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمود سيد على",
+    "nameEn": "Mahmoud Sayed Ali",
+    "position": "worker"
+  },
+  "user_2038": {
+    "code": 2038,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد فوزى",
+    "nameEn": "Mohamed Fawzy",
+    "position": "worker"
+  },
+  "user_2039": {
+    "code": 2039,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد مالك",
+    "nameEn": "Mohammed Malik",
+    "position": "worker"
+  },
+  "user_2040": {
+    "code": 2040,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد عبد الله محمد",
+    "nameEn": "Mohammed Abdullah Mohammed",
+    "position": "Technician"
+  },
+  "user_2041": {
+    "code": 2041,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "فاروق جمعه فاروق",
+    "nameEn": "Farouk Juma Farouk",
+    "position": "Technician"
+  },
+  "user_2042": {
+    "code": 2042,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "كريم عبد السلام عبد العظيم",
+    "nameEn": "Karim Abdel Salam Abdel Azim",
+    "position": "Technician"
+  },
+  "user_2043": {
+    "code": 2043,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "عبد الرحمن رمضان سيد",
+    "nameEn": "Abdul Rahman Ramadan Sayed",
+    "position": "Technician"
+  },
+  "user_2044": {
+    "code": 2044,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد محمود غانم",
+    "nameEn": "Mohamed Mahmoud Ghanem",
+    "position": "Technician"
+  },
+  "user_2045": {
+    "code": 2045,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "يحيى عبد الغنى على",
+    "nameEn": "Yahya Abdel Ghani Ali",
+    "position": "Technician"
+  },
+  "user_2046": {
+    "code": 2046,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "مصطفى محمد امين",
+    "nameEn": "Mustafa Mohamed Amin",
+    "position": "Technician"
+  },
+  "user_2047": {
+    "code": 2047,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "يوسف حسن يوسف",
+    "nameEn": "Youssef Hassan Youssef",
+    "position": "Technician"
+  },
+  "user_2048": {
+    "code": 2048,
+    "company": "Yathreb",
+    "department": "Production",
+    "email": "",
+    "nameAr": "وليد امين",
+    "nameEn": "Walid Amin",
+    "position": "worker"
+  },
+  "user_2049": {
+    "code": 2049,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد مصطفى مجاور",
+    "nameEn": "Mohamed Mustafa Majawar",
+    "position": "Technician"
+  },
+  "user_2050": {
+    "code": 2050,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد محمود محمد سيد",
+    "nameEn": "Mohamed Mahmoud Mohamed Sayed",
+    "position": "Technician"
+  },
+  "user_2051": {
+    "code": 2051,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمود عمر قرنى",
+    "nameEn": "Mahmoud Omar Qarni",
+    "position": "Technician"
+  },
+  "user_2052": {
+    "code": 2052,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "احمد صلاح احمد",
+    "nameEn": "Ahmed Salah Ahmed",
+    "position": "Technician"
+  },
+  "user_2053": {
+    "code": 2053,
+    "company": "Egymint",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمود عبد التواب داود",
+    "nameEn": "Mahmoud Abdel Tawab Dawood",
+    "position": "Technician"
+  },
+  "user_2054": {
+    "code": 2054,
+    "company": "Egymint",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "سليمان مهدى سيد",
+    "nameEn": "Sulaiman Mahdi Sayed",
+    "position": "Technician"
+  },
+  "user_2055": {
+    "code": 2055,
+    "company": "Egymint",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "حسن عباس حسن",
+    "nameEn": "Hassan Abbas Hassan",
+    "position": "Technician"
+  },
+  "user_2056": {
+    "code": 2056,
+    "company": "Egymint",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "اسلام محمد سيد",
+    "nameEn": "Islam Mohammed Sayed",
+    "position": "Technician"
+  },
+  "user_2057": {
+    "code": 2057,
+    "company": "Egymint",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "طه حسين عبد الله",
+    "nameEn": "Taha Hussein Abdullah",
+    "position": "Technician"
+  },
+  "user_2058": {
+    "code": 2058,
+    "company": "Egymint",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "عادل عزت",
+    "nameEn": "Adel Ezzat",
+    "position": "Technician"
+  },
+  "user_2059": {
+    "code": 2059,
+    "company": "Egymint",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "رمضان حسن على",
+    "nameEn": "Ramadan Hassan Ali",
+    "position": "Technician"
+  },
+  "user_2060": {
+    "code": 2060,
+    "company": "Samaras",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "على احمد على",
+    "nameEn": "Ali Ahmed Ali",
+    "position": "Winch driver"
+  },
+  "user_2061": {
+    "code": 2061,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "عمرو جمال",
+    "nameEn": "Amr Gamal",
+    "position": "Technician"
+  },
+  "user_2062": {
+    "code": 2062,
+    "company": "Samaras",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد حجازى",
+    "nameEn": "Mohamed Hegazy",
+    "position": "Clark Driver"
+  },
+  "user_2063": {
+    "code": 2063,
+    "company": "Egymint",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد سعيد صابر كيتو",
+    "nameEn": "Mohammed Saeed Saber Kito",
+    "position": "Technician"
+  },
+  "user_2064": {
+    "code": 2064,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "مصطفى مختار عبد الله",
+    "nameEn": "Mustafa Mokhtar Abdallah",
+    "position": "Technician"
+  },
+  "user_2065": {
+    "code": 2065,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمود محمد رشيد غلاب",
+    "nameEn": "Mahmoud Mohammed Rashid Ghallab",
+    "position": "Technician"
+  },
+  "user_2066": {
+    "code": 2066,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد محمود جالوريا",
+    "nameEn": "Mohamed Mahmoud Gloria",
+    "position": "Technician"
+  },
+  "user_2067": {
+    "code": 2067,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "مصطفى على محمد محمود",
+    "nameEn": "Mustafa Ali Mohammed Mahmoud",
+    "position": "Technician"
+  },
+  "user_2068": {
+    "code": 2068,
+    "company": "cic",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "اشرف عصام عكاشه",
+    "nameEn": "Ashraf Essam El Din Okasha",
+    "position": "Technician"
+  },
+  "user_2069": {
+    "code": 2069,
+    "company": "Igess",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "ياسر على محمود",
+    "nameEn": "Yasser Ali Mahmoud",
+    "position": "Technician"
+  },
+  "user_2070": {
+    "code": 2070,
+    "company": "Igess",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "احمد عويس",
+    "nameEn": "Ahmed Awis",
+    "position": "Technician"
+  },
+  "user_2071": {
+    "code": 2071,
+    "company": "cic",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "احمد نور الدين عكاشه",
+    "nameEn": "Ahmed Nour El Din Akasha",
+    "position": "Technician"
+  },
+  "user_2072": {
+    "code": 2072,
+    "company": "Igess",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "عبداللطيف ابراهيم",
+    "nameEn": "Abdul Latif Ibrahim",
+    "position": "Technician"
+  },
+  "user_2073": {
+    "code": 2073,
+    "company": "Igess",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "احمد نهان",
+    "nameEn": "Ahmed Nabhan",
+    "position": "Technician"
+  },
+  "user_2074": {
+    "code": 2074,
+    "company": "Igess",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "على الدين اشرف حسن",
+    "nameEn": "Ali Al-Din Ashraf Hassan",
+    "position": "Technician"
+  },
+  "user_2075": {
+    "code": 2075,
+    "company": "Igess",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "محمد حسنى",
+    "nameEn": "Mohamed Hosni",
+    "position": "Technician"
+  },
+  "user_2076": {
+    "code": 2076,
+    "company": "Igess",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "محمد خليل ابراهيم",
+    "nameEn": "Mohammed Khalil Ibrahim",
+    "position": "Technician"
+  },
+  "user_2077": {
+    "code": 2077,
+    "company": "Igess",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "محمد عبد الناصر غانم",
+    "nameEn": "Mohammed Abdel Nasser Ghanem",
+    "position": "Technician"
+  },
+  "user_2078": {
+    "code": 2078,
+    "company": "Igess",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "مصطفى يسرى ربيع",
+    "nameEn": "Mustafa Yasser Rabie",
+    "position": "Technician"
+  },
+  "user_2079": {
+    "code": 2079,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "محمد عاطف عبد الحميد",
+    "nameEn": "Mohamed Atef Abdel Hamid",
+    "position": "Technician"
+  },
+  "user_2080": {
+    "code": 2080,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "محمد درويش مصطفى كامل",
+    "nameEn": "Mohamed Darwish Mustafa Kamel",
+    "position": "Technician"
+  },
+  "user_2081": {
+    "code": 2081,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "الامير حجاج امين",
+    "nameEn": "ELamer Hajjaj Amin",
+    "position": "Technician"
+  },
+  "user_2082": {
+    "code": 2082,
+    "company": "Igess",
+    "department": "PM",
+    "email": "",
+    "nameAr": "ادهم هشام متولى",
+    "nameEn": "Adham Hesham Metwally",
+    "position": "Technician"
+  },
+  "user_2083": {
+    "code": 2083,
+    "company": "Igess",
+    "department": "PM",
+    "email": "",
+    "nameAr": "احمد سمير جمعه",
+    "nameEn": "Ahmed Samir Juma",
+    "position": "Technician"
+  },
+  "user_2084": {
+    "code": 2084,
+    "company": "Igess",
+    "department": "PM",
+    "email": "",
+    "nameAr": "خالد رجب",
+    "nameEn": "Khaled Ragab",
+    "position": "Technician"
+  },
+  "user_2085": {
+    "code": 2085,
+    "company": "Igess",
+    "department": "PM",
+    "email": "",
+    "nameAr": "رافت مصطفى",
+    "nameEn": "Raafat Mustafa",
+    "position": "Technician"
+  },
+  "user_2086": {
+    "code": 2086,
+    "company": "Igess",
+    "department": "PM",
+    "email": "",
+    "nameAr": "عبد المحسن مبروك",
+    "nameEn": "Abdul Mohsen Mabrouk",
+    "position": "Technician"
+  },
+  "user_2087": {
+    "code": 2087,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "عبد الرحمن شعبان محمد",
+    "nameEn": "Abdulrahman Shaaban Mohammed",
+    "position": "Technician"
+  },
+  "user_2088": {
+    "code": 2088,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "احمد جمال",
+    "nameEn": "Ahmed Gamal",
+    "position": "Lubrication Engineer"
+  },
+  "user_2089": {
+    "code": 2089,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "هشام شعبان",
+    "nameEn": "Hesham Shaban",
+    "position": "Electrical"
+  },
+  "user_2090": {
+    "code": 2090,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "محمد عبد الحميد",
+    "nameEn": "Mohamed Abd Elahmaid",
+    "position": "Inspection Engineer"
+  },
+  "user_2091": {
+    "code": 2091,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "محمد عاطف",
+    "nameEn": "Mohamed Atef",
+    "position": "Inspection Engineer"
+  },
+  "user_2092": {
+    "code": 2092,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "محمد ابو الخير",
+    "nameEn": "Mohamed Abo Elkhi",
+    "position": "Planner Engineer"
+  },
+  "user_2093": {
+    "code": 2093,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "احمد جمال",
+    "nameEn": "Ahmed Gamal",
+    "position": "Prodction emgineer"
+  },
+  "user_2094": {
+    "code": 2094,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "عمر طلحا",
+    "nameEn": "Omar Talha",
+    "position": "Prodction emgineer"
+  },
+  "user_2095": {
+    "code": 2095,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "عمر رضا",
+    "nameEn": "Omer Reda",
+    "position": "Mechnical Engineer"
+  },
+  "user_2096": {
+    "code": 2096,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "عماد احمد",
+    "nameEn": "Emad Ahmed",
+    "position": "Mechnical Engineer"
+  },
+  "user_2097": {
+    "code": 2097,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "حسين الجندي",
+    "nameEn": "Hussien Elgendy",
+    "position": "IT"
+  },
+  "user_2106": {
+    "code": 2106,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "احمد منصور",
+    "nameEn": "Ahmed Mansour",
+    "position": "Inspection Engineer"
+  },
+  "user_2107": {
+    "code": 2107,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "احمد عادل محمد",
+    "nameEn": "Ahmed Adel Mohamed",
+    "position": "Technician"
+  },
+  "user_2109": {
+    "code": 2109,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "احمد محمد رشدى",
+    "nameEn": "Ahmed Mohamed Roshdy",
+    "position": "Prodction emgineer"
+  },
+  "user_2110": {
+    "code": 2110,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد حجاج",
+    "nameEn": "Mohamed Hagag",
+    "position": "Technician"
+  },
+  "user_2111": {
+    "code": 2111,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "كريم محمد",
+    "nameEn": "Karim Mohamed",
+    "position": "Technician"
+  },
+  "user_2112": {
+    "code": 2112,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "احمد رشيدى",
+    "nameEn": "Ahmed Rashedy",
+    "position": "Shift Leader"
+  },
+  "user_2113": {
+    "code": 2113,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "زياد محمد ممدوح",
+    "nameEn": "Ziad Mohammed Mamdouh",
+    "position": "Electrical Engineer"
+  },
+  "user_2114": {
+    "code": 2114,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "عماد سمير محمد",
+    "nameEn": "emad samir mohamed",
+    "position": "Mechanical Engineer"
+  },
+  "user_2115": {
+    "code": 2115,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمود كمال عويس",
+    "nameEn": "Mahmoud Kamal Awis",
+    "position": "Mechanical Technician"
+  },
+  "user_2116": {
+    "code": 2116,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "ابراهيم عزت زكى",
+    "nameEn": "Ibrahim Ezzat Zaki",
+    "position": "Mechanical Technician"
+  },
+  "user_2117": {
+    "code": 2117,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "عبد المنعم محمد عبدالمنعم",
+    "nameEn": "A.elmonem Mohamed A.elmonem",
+    "position": "Inspection Engineer"
+  },
+  "user_2118": {
+    "code": 2118,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد عبد الله محمد",
+    "nameEn": "Mohamed A.ALAH Mohamed",
+    "position": "Technician"
+  },
+  "user_2119": {
+    "code": 2119,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد عاطف محمد طه",
+    "nameEn": "Mohamed Atif Mohamed Taha",
+    "position": "Mechanical Engineer"
+  },
+  "user_2120": {
+    "code": 2120,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمود سيد عبدالوهاب",
+    "nameEn": "Mahmoud Sayed A.wahab",
+    "position": "Mechanical Section Head"
+  },
+  "user_2121": {
+    "code": 2121,
+    "company": "Igess",
+    "department": "PM",
+    "email": "",
+    "nameAr": "طه سمير",
+    "nameEn": "Taha Samir",
+    "position": "Technician"
+  },
+  "user_2122": {
+    "code": 2122,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد طارق",
+    "nameEn": "Mahmoud Tarek",
+    "position": "Shift Leader"
+  },
+  "user_2123": {
+    "code": 2123,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد عبداللاه",
+    "nameEn": "Mohamed A.Allah",
+    "position": "Technician"
+  },
+  "user_2124": {
+    "code": 2124,
+    "company": "Egymint",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد احمد على",
+    "nameEn": "Mohamed Ahmed ali",
+    "position": "Technician"
+  },
+  "user_2125": {
+    "code": 2125,
+    "company": "Igess",
+    "department": "PM",
+    "email": "",
+    "nameAr": "محمد ابو سويلم",
+    "nameEn": "Mohamed Abo Swailm",
+    "position": "Technician"
+  },
+  "user_2126": {
+    "code": 2126,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "مصطفي صابر",
+    "nameEn": "Mostafa Saber",
+    "position": "Technician"
+  },
+  "user_2127": {
+    "code": 2127,
+    "company": "Igess",
+    "department": "Safety",
+    "email": "",
+    "nameAr": "محمد عبدالحميد",
+    "nameEn": "Mohamed A.Hamid",
+    "position": "Technician"
+  },
+  "user_223": {
+    "code": 223,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "أ.منعم عبد العظيم محمد",
+    "nameEn": "A.Moneim A.Azim Mohamed",
+    "position": "Snr. Fitter"
+  },
+  "user_230": {
+    "code": 230,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "أ.حامد مبروك إبراهيم محمد",
+    "nameEn": "A.Hamid Mabrouk Ibrahim Mohamed",
+    "position": "Kiln 2 Foreman"
+  },
+  "user_243": {
+    "code": 243,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد شعبان طه حسن",
+    "nameEn": "Mohamed Shaaban Taha Hassan",
+    "position": "Kiln Operator"
+  },
+  "user_247": {
+    "code": 247,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد شعبان جواد الشيمي",
+    "nameEn": "Mohamed Shaaban A.Gawad Shimy",
+    "position": "Mechanical Foreman - Raw mills"
+  },
+  "user_249": {
+    "code": 249,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد اسماعيل محمود بحر",
+    "nameEn": "Mohamed Ismail Mahmoud Bahr",
+    "position": "Snr. Production Technician"
+  },
+  "user_251": {
+    "code": 251,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "حسين كمال الدين حسن عيسى",
+    "nameEn": "Hussein Kamal ElDin Hassan Eissa",
+    "position": "Kiln Operator"
+  },
+  "user_255": {
+    "code": 255,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "أشرف محمد مصطفى موسى",
+    "nameEn": "Ashraf Mohamed Mostafa Moussa",
+    "position": "X-Ray Lab Snr. Technician"
+  },
+  "user_261": {
+    "code": 261,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "أحمد محمد علي درويش",
+    "nameEn": "Ahmed Mohamed Aly Darwish",
+    "position": "Rigger"
+  },
+  "user_262": {
+    "code": 262,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "راضى محمد أحمد محمد",
+    "nameEn": "Rady Mohamed Ahmed Mohamed",
+    "position": "Snr. Electrician"
+  },
+  "user_271": {
+    "code": 271,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "خليل ابراهيم عبد الصمد محمد",
+    "nameEn": "Khalil Ibrahim A.Samad Mohamed",
+    "position": "Snr. Instrumentation Technician"
+  },
+  "user_272": {
+    "code": 272,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد رشيد غلاب أيوب",
+    "nameEn": "Mohamed Rashid Ghallab Ayoub",
+    "position": "Mechanical Foreman - Kilns"
+  },
+  "user_273": {
+    "code": 273,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "أشرف عبد العاطى محالهل معوض",
+    "nameEn": "Ashraf A.Aty Mehalhel Moawad",
+    "position": "Snr. Electrician"
+  },
+  "user_276": {
+    "code": 276,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد عبد المنعم أ.مقصود",
+    "nameEn": "Mohamed A.Moneim A.Maksoud",
+    "position": "Fitter"
+  },
+  "user_279": {
+    "code": 279,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "أ.عظيم عبد الله حسين سليم",
+    "nameEn": "A.Azim A.Allah Hussein Selim",
+    "position": "Snr. Welder"
+  },
+  "user_281": {
+    "code": 281,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "رجب عويس محمود أحمد",
+    "nameEn": "Ragab Eweis Mahmoud Ahmed",
+    "position": "Snr. Electrician"
+  },
+  "user_283": {
+    "code": 283,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "أ.سلام أ.عظيم محمود",
+    "nameEn": "A.Salam A.Azim Mahmoud",
+    "position": "Snr. Production Technician"
+  },
+  "user_286": {
+    "code": 286,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمود عطية محمد عطية",
+    "nameEn": "Mahmoud Ateya Mohamed Ateya",
+    "position": "Mobile Equipment Driver"
+  },
+  "user_291": {
+    "code": 291,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "أ.باقي أحمد عبد الباقي معوض",
+    "nameEn": "A.Baky Ahmed A.Baki Moawad",
+    "position": "Snr. Fitter"
+  },
+  "user_295": {
+    "code": 295,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد فخري محمد دياب",
+    "nameEn": "Mohamed Fakhry Mohamed Diab",
+    "position": "Snr. Welder"
+  },
+  "user_314": {
+    "code": 314,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "أحمد جودة موسى محمد",
+    "nameEn": "Ahmed Gouda Moussa Mohamed",
+    "position": "Snr. Mechanical Inspector"
+  },
+  "user_317": {
+    "code": 317,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "حسن محمد أحمد حسين",
+    "nameEn": "Hassan Mohamed Ahmed Hussein",
+    "position": "Snr. Fitter"
+  },
+  "user_318": {
+    "code": 318,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "عادل سيد أحمد علي",
+    "nameEn": "Adel Sayed Ahmed Aly",
+    "position": "Snr. Electrician"
+  },
+  "user_319": {
+    "code": 319,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "سيد فهمي سيد جاب الله",
+    "nameEn": "Sayed Fahmy Sayed Gab Allah",
+    "position": "Snr. Fitter"
+  },
+  "user_330": {
+    "code": 330,
+    "company": "Titan",
+    "department": "Dispatch",
+    "email": "",
+    "nameAr": "أ.عزيز محمد محمد عبد العزيز",
+    "nameEn": "A.Aziz Mohamed Mohamed A.Aziz",
+    "position": "Dispatch Officer"
+  },
+  "user_332": {
+    "code": 332,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "سعيد عبد التواب أمين بدوي",
+    "nameEn": "Said A.Tawab Amin Badawy",
+    "position": "Kiln Operator"
+  },
+  "user_336": {
+    "code": 336,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "سيد ال آل قطب عباس",
+    "nameEn": "Sayed A.Aal Kotb Abbas",
+    "position": "Snr. Lub. Technician"
+  },
+  "user_337": {
+    "code": 337,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "محمد عبد العزيز نصر الدين",
+    "nameEn": "Moahmed Abd El Aziz Nasr El Din",
+    "position": "BU Quality Department Manager"
+  },
+  "user_338": {
+    "code": 338,
+    "company": "Titan",
+    "department": "Dispatch",
+    "email": "",
+    "nameAr": "حمودة نادي حمودة محمد",
+    "nameEn": "Hamouda Nady Hamouda Mohamed",
+    "position": "Dispatch Officer"
+  },
+  "user_342": {
+    "code": 342,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "رمضان حسين محمود محمد",
+    "nameEn": "Ramadan Hussein Mahmoud Mohamed",
+    "position": "Packing Operator"
+  },
+  "user_344": {
+    "code": 344,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "ممدوح كمال محمد ابراهيم",
+    "nameEn": "Mamdouh Kamal Mohamed Ibrahim",
+    "position": "Raw Material Weigh Bridge Operator"
+  },
+  "user_345": {
+    "code": 345,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "مجدي الحكيم محمد سليمان",
+    "nameEn": "Magdy A.Hakim Mohamed Soliman",
+    "position": "Snr. Fitter"
+  },
+  "user_350": {
+    "code": 350,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "القزافي محمود مصطفى دياب",
+    "nameEn": "ElKazzafy Mahmoud Mostafa Diab",
+    "position": "Snr. Packing Technician"
+  },
+  "user_351": {
+    "code": 351,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "يسري ربيع متولي حسن",
+    "nameEn": "Yosry Rabie Metwaly Hassan",
+    "position": "Snr. Packing Technician"
+  },
+  "user_365": {
+    "code": 365,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "طلعت عدلي زكي أبو المكارم",
+    "nameEn": "Talaat Adly Zaky Abou ElMakarem",
+    "position": "Vehicles Licenses Clerk"
+  },
+  "user_366": {
+    "code": 366,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمود محمد سيد أحمد",
+    "nameEn": "Mahmoud Mohamed Sayed Ahmed",
+    "position": "Packing Foreman"
+  },
+  "user_368": {
+    "code": 368,
+    "company": "Titan",
+    "department": "Dispatch",
+    "email": "",
+    "nameAr": "محمد محمد علي عويس",
+    "nameEn": "Mohamed Mohamed Aly Ewias",
+    "position": "Dispatch SH"
+  },
+  "user_369": {
+    "code": 369,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "سمير محمد عيد جابر",
+    "nameEn": "Samir Mohamed Eid Gaber",
+    "position": "Snr. Fitter"
+  },
+  "user_370": {
+    "code": 370,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "خالد الصمد اسماعيل علي",
+    "nameEn": "Khaled A.Samad Ismail Aly",
+    "position": "Mills Operator"
+  },
+  "user_388": {
+    "code": 388,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "راضي محمد أحمد عفيفي",
+    "nameEn": "Rady Mohamed Ahmed Afify",
+    "position": "Mechanical Foreman - Utilites"
+  },
+  "user_391": {
+    "code": 391,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "ناصر فتحي محمد الدسوقي",
+    "nameEn": "Nasser Fathy Mohamed Dessouky",
+    "position": "Fitter"
+  },
+  "user_396": {
+    "code": 396,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "رجب عبد السلام حافظ زيدان",
+    "nameEn": "Ragab A.Salam Hafez Zeidan",
+    "position": "Snr. Lubrication Technician"
+  },
+  "user_411": {
+    "code": 411,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "سامي سيد كاوي محمد",
+    "nameEn": "Samy Sayed A.Kawy Mohamed",
+    "position": "Snr. Production Technician"
+  },
+  "user_412": {
+    "code": 412,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "حيدر حليم صاوي محمد",
+    "nameEn": "Heidar A.Halim Sawy Mohamed",
+    "position": "Electrical Inspection Foreman"
+  },
+  "user_417": {
+    "code": 417,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "مختار حسن محمد حسن",
+    "nameEn": "Mokhtar Hassan Mohamed Hassan",
+    "position": "Snr. Fitter"
+  },
+  "user_424": {
+    "code": 424,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "أ.الله سيد أ.الله محمد",
+    "nameEn": "A.Allah Sayed A.Allah Mohamed",
+    "position": "Lubrication Foreman"
+  },
+  "user_437": {
+    "code": 437,
+    "company": "Titan",
+    "department": "Dispatch",
+    "email": "",
+    "nameAr": "محمد صلاح الدين محمد حسين",
+    "nameEn": "Mohamed Salah ElDin Mohamed Hussein",
+    "position": "Dispatch Officer"
+  },
+  "user_453": {
+    "code": 453,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "خالد محمد حسين عثمان",
+    "nameEn": "Khaled Mohamed Hussein Osman",
+    "position": "AC Technician"
+  },
+  "user_468": {
+    "code": 468,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "عيد عظيم محمود محمد",
+    "nameEn": "Eid A.Azim Mahmoud Mohamed",
+    "position": "Production Worker"
+  },
+  "user_473": {
+    "code": 473,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "سمير كمال محمد عبد الله",
+    "nameEn": "Samir Kamal Mohamed A.Allah",
+    "position": "Production Worker"
+  },
+  "user_477": {
+    "code": 477,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "أ.حليم قرني علي",
+    "nameEn": "A.Halim Korany Aly",
+    "position": "Snr. Production Technician"
+  },
+  "user_485": {
+    "code": 485,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد صبحي عبد الله حسان",
+    "nameEn": "Mohamed Sobhy A.Allah Hassaan",
+    "position": "Packing Operator"
+  },
+  "user_486": {
+    "code": 486,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "حاتم جابر محمد محمد",
+    "nameEn": "Hatem Gaber Mohamed Mohamed",
+    "position": "Kiln Operator"
+  },
+  "user_503": {
+    "code": 503,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "أيمن حسني عبد الحليم",
+    "nameEn": "Ayman Hosny A.Halim",
+    "position": "Chemical Lab. Forman"
+  },
+  "user_504": {
+    "code": 504,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "أ.ناصر عبد العظيم أحمد",
+    "nameEn": "A.Nasser A.Azim Ahmed",
+    "position": "X-Ray Lab Snr. Technician"
+  },
+  "user_508": {
+    "code": 508,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "شعبان محمد علي درويش",
+    "nameEn": "Shaaban Mohamed Aly Darwish",
+    "position": "Production Worker"
+  },
+  "user_512": {
+    "code": 512,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "سيد محمد سيد عبد الحفيظ",
+    "nameEn": "Sayed Mohamed Sayed A.Hafeez",
+    "position": "Production Worker"
+  },
+  "user_517": {
+    "code": 517,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "فتحى سيد على عبد السلام",
+    "nameEn": "Fathy Sayed Aly A.Salam",
+    "position": "Production Worker"
+  },
+  "user_530": {
+    "code": 530,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "رمضان سيد عبد الحميد",
+    "nameEn": "Ramadan Sayed A.Hamid",
+    "position": "Snr. Packing Technician"
+  },
+  "user_531": {
+    "code": 531,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "أ.جواد رحيم",
+    "nameEn": "A.Gawad A.Rehim",
+    "position": "Production Technician"
+  },
+  "user_55": {
+    "code": 55,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمود مخيمر ابراهيم عبد المنعم",
+    "nameEn": "Mahmoud Mekheimar Ibrahim A.Moneim",
+    "position": "Snr. Production Technician"
+  },
+  "user_562": {
+    "code": 562,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "أ.ناصر عبيد محمد سليم",
+    "nameEn": "A.Nasser Ebeid Mohamed Selim",
+    "position": "Snr. Mechanical Inspector"
+  },
+  "user_571": {
+    "code": 571,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "حمدي احمد سعيد ابو سيف",
+    "nameEn": "Hamdy Ahmed Said Abou Seif",
+    "position": "Snr. Fitter"
+  },
+  "user_577": {
+    "code": 577,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "جودة حسن محمد حسن",
+    "nameEn": "Gouda Hassan Mohamed Hassan",
+    "position": "Snr. Fitter"
+  },
+  "user_59": {
+    "code": 59,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "مدحت فاروق أحمد علي",
+    "nameEn": "Medhat Farouk Ahmed Aly",
+    "position": "Crusher Operator"
+  },
+  "user_590": {
+    "code": 590,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "علي محمد علي منصور",
+    "nameEn": "Aly Mohamed Aly Mansour",
+    "position": "Production Worker"
+  },
+  "user_6165": {
+    "code": 6165,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "خالد محيي الدين خورشيد",
+    "nameEn": "Khaled Mohi EL Din Khorshed",
+    "position": "HR Business Lead"
+  },
+  "user_644": {
+    "code": 644,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "عصام محمود السيد خميس",
+    "nameEn": "Essam Mahmoud ElSayed Khamis",
+    "position": "Electrician"
+  },
+  "user_645": {
+    "code": 645,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "ابراهيم احمد محمد محمد",
+    "nameEn": "Ibrahim Ahmed Mohamed Mohamed",
+    "position": "Snr. Electrician"
+  },
+  "user_665": {
+    "code": 665,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "عماد أحمد علي معوض",
+    "nameEn": "Emad Ahmed Aly Moawad",
+    "position": "Snr. Technician"
+  },
+  "user_668": {
+    "code": 668,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد محمد عبد الباقي البحيري",
+    "nameEn": "Mohamed Mohamed A.Baky ElBeheiry",
+    "position": "Snr. Production Technician"
+  },
+  "user_672": {
+    "code": 672,
+    "company": "Titan",
+    "department": "Stores",
+    "email": "",
+    "nameAr": "طارق محمد محمد بصل",
+    "nameEn": "Tarek Mohamed Mohamed Basal",
+    "position": "Stores Supervisor"
+  },
+  "user_674": {
+    "code": 674,
+    "company": "Titan",
+    "department": "Finance",
+    "email": "",
+    "nameAr": "محمد حنفي عبد الصمد",
+    "nameEn": "Mohamed Hanafy Abd El Samad",
+    "position": "Financial Controller"
+  },
+  "user_678": {
+    "code": 678,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "أ.ناصر غانم عبد الوهاب",
+    "nameEn": "A.Nasser Ghanem A.Wahab",
+    "position": "Fitter"
+  },
+  "user_679": {
+    "code": 679,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد زارع عبد المولى",
+    "nameEn": "Mohamed Zarea A.Moula",
+    "position": "Snr. Fitter"
+  },
+  "user_701": {
+    "code": 701,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "عويس الكوراني أ.عطي أحمد",
+    "nameEn": "Eweis ElKorany A.Aty Ahmed",
+    "position": "X-Ray Lab Senior Technician"
+  },
+  "user_702": {
+    "code": 702,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "أيمن فاروق فتاحي أمين",
+    "nameEn": "Ayman Farouk Ftahy Amin",
+    "position": "X-Ray Lab Snr. Technician"
+  },
+  "user_706": {
+    "code": 706,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "محمود محمود عبد الوهاب",
+    "nameEn": "Mahmoud Mahmoud Abd El Wahab",
+    "position": "Electrical SH - Kilns,Raw mills & crushers"
+  },
+  "user_712": {
+    "code": 712,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "ربيع معوض معوض محمود",
+    "nameEn": "Rabie Moawad Moawad Mahmoud",
+    "position": "Packing CCR Operator"
+  },
+  "user_715": {
+    "code": 715,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "رمضان محمد محمد عيسى",
+    "nameEn": "Ramadan Mohamed Mohamed Eissa",
+    "position": "Snr. Electrician"
+  },
+  "user_716": {
+    "code": 716,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "مرزوق كردي علي عويس",
+    "nameEn": "Marzouk Kordy Aly Eweis",
+    "position": "Snr. Instrumentation Technician"
+  },
+  "user_722": {
+    "code": 722,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "أحمد عليم عبد اللطيف",
+    "nameEn": "Ahmed A.Alim A.Latif",
+    "position": "Snr. Electrician"
+  },
+  "user_739": {
+    "code": 739,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "محمد كمال الدين عليم",
+    "nameEn": "Mohamed Kamal ElDin A.Alim",
+    "position": "Fitter"
+  },
+  "user_747": {
+    "code": 747,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "سيد محمد صبرة أ.جواد",
+    "nameEn": "Sayed Mohamed Sabra A.Gawad",
+    "position": "Production Worker"
+  },
+  "user_750": {
+    "code": 750,
+    "company": "Titan",
+    "department": "Stores",
+    "email": "",
+    "nameAr": "زين العابدين جمعة أحمد",
+    "nameEn": "Zein ElAbedeen Gomaa Ahmed",
+    "position": "Snr. Store Keeper"
+  },
+  "user_752": {
+    "code": 752,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "رمضان حامد سعيد عبد الجواد",
+    "nameEn": "Ramadan Hamed Said A.Gawad",
+    "position": "Material Handling SV"
+  },
+  "user_754": {
+    "code": 754,
+    "company": "Titan",
+    "department": "Plant_Manag",
+    "email": "",
+    "nameAr": "حسام الدين مصطفى طه",
+    "nameEn": "Hossam EL Din Mostafa Taha",
+    "position": "Plant Manager"
+  },
+  "user_757": {
+    "code": 757,
+    "company": "Titan",
+    "department": "Plant_Manag",
+    "email": "",
+    "nameAr": "نبيل فتحي عبد العزيز",
+    "nameEn": "Nabil Fathy Abd El Aziz",
+    "position": "Maintenance Department Manager"
+  },
+  "user_759": {
+    "code": 759,
+    "company": "Titan",
+    "department": "Mechanical",
+    "email": "",
+    "nameAr": "ناصر كمال محمد",
+    "nameEn": "Naser Kamal Mohamed",
+    "position": "Mechanical SH - Raw mills & crushers"
+  },
+  "user_760": {
+    "code": 760,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "رضا عبد الغني محمد ابو طالب",
+    "nameEn": "Reda A.Ghany Mohamed Abou Taleb",
+    "position": "Snr. Reporting Engineer"
+  },
+  "user_771": {
+    "code": 771,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد ربيع أحمد الغفاري",
+    "nameEn": "Mohamed Rabea Ahmed Ghifary",
+    "position": "Production Service Section Head"
+  },
+  "user_774": {
+    "code": 774,
+    "company": "Titan",
+    "department": "Dispatch",
+    "email": "",
+    "nameAr": "أحمد رشاد محمد عليم",
+    "nameEn": "Ahmed Rashad Mohamed A.Alim",
+    "position": "Dispatch Officer"
+  },
+  "user_779": {
+    "code": 779,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "محمد سعيد محمد سعيد",
+    "nameEn": "Mohamed Said Mohamed Said",
+    "position": "Telephone Maintenance Technician"
+  },
+  "user_798": {
+    "code": 798,
+    "company": "Titan",
+    "department": "Stores",
+    "email": "",
+    "nameAr": "رجب منير ع كاوي أمين",
+    "nameEn": "Ragab Mounir A.Kawy Amin",
+    "position": "Snr. Store Keeper"
+  },
+  "user_801": {
+    "code": 801,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "تونى أحمد عثمان",
+    "nameEn": "Touny Ahmed Ossman",
+    "position": "BU Com., EmplRelat&Gov.Aff. DM"
+  },
+  "user_841": {
+    "code": 841,
+    "company": "Titan",
+    "department": "Dispatch",
+    "email": "",
+    "nameAr": "محمد عبد العظيم حسن",
+    "nameEn": "Mohamed Abdel Azeem Hassan",
+    "position": "Dispatch Officer"
+  },
+  "user_847": {
+    "code": 847,
+    "company": "Titan",
+    "department": "Security",
+    "email": "",
+    "nameAr": "صلاح الدين علي يونس",
+    "nameEn": "Salah El Din Aly Younes",
+    "position": "Security Manager"
+  },
+  "user_853": {
+    "code": 853,
+    "company": "Titan",
+    "department": "Legal",
+    "email": "",
+    "nameAr": "محمد هاشم عبد الجواد خليفة",
+    "nameEn": "Mohamed Hashim Abdel Gawad Khalifa",
+    "position": "Legal Affairs Clerk"
+  },
+  "user_854": {
+    "code": 854,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "رمضان سيد عرفات حامد",
+    "nameEn": "Ramadan Sayed Arafat Hamed",
+    "position": "Admin Clerk"
+  },
+  "user_855": {
+    "code": 855,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "رمضان طه عبد الرؤوف طه",
+    "nameEn": "Ramadan Taha Abdel Raouf Taha",
+    "position": "Admin Clerk"
+  },
+  "user_856": {
+    "code": 856,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "سيد صابر متولي محمد",
+    "nameEn": "Sayed Saber Metwaly Mohamed",
+    "position": "Personnel Clerk"
+  },
+  "user_858": {
+    "code": 858,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "سيد شعبان كامل عبد القادر",
+    "nameEn": "Sayed Shaaban Kamel Abdel Kader",
+    "position": "Admin Clerk"
+  },
+  "user_862": {
+    "code": 862,
+    "company": "Titan",
+    "department": "Finance",
+    "email": "",
+    "nameAr": "عبد العظيم طه عبد العليم عمار",
+    "nameEn": "Abdel Azeem Taha Abdel Aleem Ammar",
+    "position": "Accounting Clerk"
+  },
+  "user_863": {
+    "code": 863,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "وليد حسين عبد الستار محمد",
+    "nameEn": "Walid Hussein Abdel Sattar Mohamed",
+    "position": "Admin Clerk"
+  },
+  "user_864": {
+    "code": 864,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد سعد عبد الغني شحاتة",
+    "nameEn": "Mohamed Saad Abdel Ghani Shehata",
+    "position": "Admin Clerk"
+  },
+  "user_865": {
+    "code": 865,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "علاء عزت ممدوح حسن",
+    "nameEn": "Ala'a Ezzat Mamdouh Hassan",
+    "position": "Clerk of Process and Quality Management"
+  },
+  "user_875": {
+    "code": 875,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "ابراهيم احمد محمود حسنين",
+    "nameEn": "Ibrahim Ahmed Mahmouhd Hassanin",
+    "position": "Raw mills and Pre Blending Section Head"
+  },
+  "user_879": {
+    "code": 879,
+    "company": "Titan",
+    "department": "Plant_Manag",
+    "email": "",
+    "nameAr": "نشوى محمد مصطفى محمد",
+    "nameEn": "Nashwa Mohamed Mostafa Mohamed",
+    "position": "Senior Secretary"
+  },
+  "user_882": {
+    "code": 882,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "علاء حامد عبد المعطي عبد الجواد",
+    "nameEn": "Alaa Hamed Abdel Motti Abdel Gawad",
+    "position": "Production Worker"
+  },
+  "user_884": {
+    "code": 884,
+    "company": "Titan",
+    "department": "Stores",
+    "email": "",
+    "nameAr": "أحمد محمد عبد العليم",
+    "nameEn": "Ahmed Mohamed Abd El Alim",
+    "position": "Materials Ware House Section Head"
+  },
+  "user_893": {
+    "code": 893,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "سيد سعد محمد سالم",
+    "nameEn": "Sayed Saad Mohamed Salem",
+    "position": "Production Technician"
+  },
+  "user_896": {
+    "code": 896,
+    "company": "Titan",
+    "department": "Legal",
+    "email": "",
+    "nameAr": "أحمد طلعت أحمد علي",
+    "nameEn": "Ahmed Talaat Ahmed Ali",
+    "position": "Senior Lawyer"
+  },
+  "user_904": {
+    "code": 904,
+    "company": "Titan",
+    "department": "Plant_Manag",
+    "email": "",
+    "nameAr": "حازم حسني عبد العظيم",
+    "nameEn": "Hazem Hosny Abd EL Azeem",
+    "position": "Manufacturing Manager"
+  },
+  "user_905": {
+    "code": 905,
+    "company": "Titan",
+    "department": "Purchasing",
+    "email": "",
+    "nameAr": "أحمد مصطفى سيد محمود",
+    "nameEn": "Ahmed Mostafa Sayed Mahmoud",
+    "position": "Snr. Buyer"
+  },
+  "user_915": {
+    "code": 915,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محرز معبد أمين خضر",
+    "nameEn": "Mehrez Meabed Amin khedr",
+    "position": "Quarries Manager"
+  },
+  "user_917": {
+    "code": 917,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "محمد يحيى أحمد علي",
+    "nameEn": "Mohamed yehia Ahmed Ali",
+    "position": "Mehtods Manager"
+  },
+  "user_923": {
+    "code": 923,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "أحمد سيد يوسف عويس",
+    "nameEn": "Ahmed Sayed Youssef Ewiss",
+    "position": "Process Manager"
+  },
+  "user_933": {
+    "code": 933,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "محمد جمعة عبد اللطيف",
+    "nameEn": "Mohamed Gomaa Abd El Latif",
+    "position": "Automation & Instrumentation Manager"
+  },
+  "user_951": {
+    "code": 951,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "محمد أحمد شوقي حسن",
+    "nameEn": "Mohamed Ahmed Shawky Hassan",
+    "position": "Production and Process Department Manager"
+  },
+  "user_957": {
+    "code": 957,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "حسام على عبد الحكيم ع الله",
+    "nameEn": "Hossam Aly Abdel Hakim A. Allah",
+    "position": "Personnel Clerk"
+  },
+  "user_958": {
+    "code": 958,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "أحمد نادي علي الدسوقي",
+    "nameEn": "Ahmed Nady Aly Desouky",
+    "position": "Security Clerk"
+  },
+  "user_959": {
+    "code": 959,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "أحمد محمد عبد الحميد إسماعيل",
+    "nameEn": "Ahmed Mohamed A. Hameed Ismail",
+    "position": "Driver"
+  },
+  "user_960": {
+    "code": 960,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "أسامة حسين عبد الصمد صالح",
+    "nameEn": "Osama Hussein Abdel Samad Saleh",
+    "position": "Security Clerk"
+  },
+  "user_963": {
+    "code": 963,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "محمد عويس أحمد عثمان",
+    "nameEn": "Mohamed Ewiees Ahmed Osman",
+    "position": "Telephone Maintenance Worker"
+  },
+  "user_966": {
+    "code": 966,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "محمد أحمد عبد النعيم",
+    "nameEn": "Mohamed Ahmed Abd El Naeem",
+    "position": "Automation & Instrumentation Section Head"
+  },
+  "user_969": {
+    "code": 969,
+    "company": "Titan",
+    "department": "Quality",
+    "email": "",
+    "nameAr": "الامير عبد الله عبد الله",
+    "nameEn": "El Amir Abdalhha Abdalhha",
+    "position": "Quality Control Manager"
+  },
+  "user_973": {
+    "code": 973,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "أحمد محمود عبد السلام بكر",
+    "nameEn": "Ahmed Mahmoud Abd El Salam Bakr",
+    "position": "Cement Mills & Packing Section Head"
+  },
+  "user_974": {
+    "code": 974,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "",
+    "nameAr": "هاني رجب محمد أحمد",
+    "nameEn": "Hani Ragab Mohamed Ahmed",
+    "position": "Automation Section Head"
+  },
+  "user_976": {
+    "code": 976,
+    "company": "Titan",
+    "department": "Electrical",
+    "email": "walid.alkady82@gmail.com",
+    "nameAr": "وليد علي زين العابدين القاضي",
+    "nameEn": "Waild Aly Zain El Abdeen El Kady",
+    "position": "Electrical Section Head"
+  },
+  "user_983": {
+    "code": 983,
+    "company": "Titan",
+    "department": "PM",
+    "email": "",
+    "nameAr": "أحمد شعبان حسين سيد",
+    "nameEn": "Ahmed Shaban Houzine Sayed",
+    "position": "Senior Mech Engineer"
+  },
+  "user_987": {
+    "code": 987,
+    "company": "Titan",
+    "department": "Production",
+    "email": "",
+    "nameAr": "أحمد رؤوف عبد السلام",
+    "nameEn": "Ahmed Raouf Abd El Salam",
+    "position": "Kiln Section Head"
+  },
+  "user_995": {
+    "code": 995,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "عبد العليم سليمان عبد الغني سليمان",
+    "nameEn": "Abdel Aliem Soliman Abdel Ghany Soliman",
+    "position": "Security Guard"
+  },
+  "user_997": {
+    "code": 997,
+    "company": "Titan",
+    "department": "HR",
+    "email": "",
+    "nameAr": "رمضان محمد طه متولي",
+    "nameEn": "Ramadan Mohamed Taha Metwally",
+    "position": "Security Guard"
+  }
+}

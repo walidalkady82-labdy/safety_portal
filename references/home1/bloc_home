@@ -1,0 +1,601 @@
+import 'dart:async';
+
+import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:safety_portal/core/logger.dart';
+import 'package:safety_portal/data/model/model_analitcs_summery.dart';
+
+import '../../data/model/model_atr.dart';
+import '../../data/service/service_ai.dart';
+import '../../data/service/service_analytics.dart';
+import '../../data/service/service_atr.dart';
+import '../../locator.dart';
+
+enum HomeStatus { initial, loading, success, failure }
+enum SubmissionStatus { initial, submitting, success, failure ,showConfirmation}
+enum AiStatus { initial, analyzing, success, failure }
+enum AnalyticsStatus { initial, loading, success, failure }
+
+const List<String> lines = ["1", "2" , "1&2" , "Non-Process"];
+const List<String> areas = ["External quarries",
+                                "Quarry",
+                                "Lime stone crusher",
+                                "Samares Workshop",
+                                "Coal storage",
+                                "Clay crusher",
+                                "Pre blending area",
+                                "Raw mill",
+                                "RDF",
+                                "Preheater/Kiln",
+                                "Bypass",
+                                "Ammonia tank",
+                                "Coal mill",
+                                "DSS",
+                                "Palamatic",
+                                "Used oil tanks",
+                                "Daily mazzot tank",
+                                "Cooler",
+                                "Cement mills",
+                                "Gypsum crusher",
+                                "Silos",
+                                "Packing",
+                                "Main mazzot tank",
+                                "Electric stations",
+                                "Electrical Tunnel",
+                                "Utilities",
+                                "Water Stations",
+                                "Diesel Generator",
+                                "Fuel station",
+                                "Mechanical workshop ",
+                                "Electrical workshop",
+                                "Mobile Equp.",
+                                "Isolation Room",
+                                "Clinic&Ambulance",
+                                "Labs",
+                                "CCR Building",
+                                "Warehouse",
+                                "Admin Building",
+                                "Medical Admin",
+                                "Technical Building",
+                                "Containers",
+                                "Mosque",
+                                "Warehouse",
+                                "Site",
+                                "Other",
+                                "Overhead cranes",
+                                "co2 tank",
+                                "emergency room",
+                                "Safety  shower",
+                                "Jupiter protection tools",
+                                "Emergency doors",
+                                "Foma machine",
+                                "fire fighting equipment",
+                                "Bathrooms",
+                                "Lifting tools",
+                                "Containers inspection."
+                                ];
+const List<String> departments = [
+  "Plant_Manag",
+  "Safety",
+  "Environment",
+  "Production",
+  "Mechanical.",
+  "Electrical.",
+  "PM.",
+  "Quality",
+  "Stores",
+  "HR",
+  "Dispatch",
+  "Purchasing ",
+  "Security",
+  "Finance",
+  "Legal",
+  "Contractor.",
+
+  ];
+
+
+class StateHome extends Equatable {
+  // --- UI Status ---
+  final HomeStatus status;
+  final String? errorMessage;
+  final bool isArabic;
+  final int tabIndex;
+
+  // --- Analytics Data ---
+  final ModelAnalyticsSummary? analyticsSummary;
+  final List<TrendAnalysis> alerts;
+  // --- Form / AI Data ---
+  final AnalyticsStatus analyticsStatus;
+
+  // Form Fields
+  final String observation;
+  final String action;
+  final String? selectedLine;
+  final String? selectedArea;
+  final String? selectedType;
+  final String? selectedHazardKind;
+  final String? selectedDetailedKind;
+  final String? selectedLevel;
+  final String? selectedRespDept;
+  final String? assignedTo;
+  
+  // AI Metadata
+  final List<double>? currentVector;
+  final String? duplicateWarning;
+  final Map<String, dynamic>? predictions; // Holds type, hazard_kind, etc.
+  final bool isDuplicateSuspect; // Flag to mark the record
+  final AiStatus aiStatus;
+
+  // --- Submission Status ---
+  final SubmissionStatus submissionStatus;
+
+  const StateHome({
+    this.status = HomeStatus.initial,
+    this.errorMessage,
+    this.isArabic = false,
+    this.tabIndex = 0,
+    this.analyticsStatus = AnalyticsStatus.initial,
+    this.analyticsSummary,
+    this.alerts = const [],
+    this.aiStatus = AiStatus.initial,
+    this.predictions,
+    this.currentVector,
+    this.duplicateWarning,
+    this.isDuplicateSuspect = false,
+    this.submissionStatus = SubmissionStatus.initial,
+    this.observation = '',
+    this.action = '',
+    this.selectedLine,
+    this.selectedArea,
+    this.selectedType,
+    this.selectedHazardKind,
+    this.selectedDetailedKind,
+    this.selectedLevel,
+    this.selectedRespDept,
+    this.assignedTo,
+  });
+
+  /// Helper to get localized strings based on state
+  String get currentLang => isArabic ? 'ar' : 'en';
+
+  StateHome copyWith({
+    HomeStatus? status,
+    String? errorMessage,
+    bool? isArabic,
+    int? tabIndex,
+    ModelAnalyticsSummary? analyticsSummary,
+    AnalyticsStatus? analyticsStatus,
+    AiStatus? aiStatus,
+    List<TrendAnalysis>? alerts,
+    Map<String, dynamic>? predictions,
+    String? observation,
+    String? action,
+    String? selectedLine,
+    String? selectedArea,
+    String? selectedType,
+    String? selectedHazardKind,
+    String? selectedDetailedKind,
+    String? selectedLevel,
+    String? selectedRespDept,
+    String? assignedTo,
+    List<double>? currentVector,
+    String? duplicateWarning,
+    bool? isDuplicateSuspect,
+    SubmissionStatus? submissionStatus,
+  }) {
+    return StateHome(
+      status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
+      isArabic: isArabic ?? this.isArabic,
+      tabIndex: tabIndex ?? this.tabIndex,
+      analyticsStatus: analyticsStatus ?? this.analyticsStatus,
+      analyticsSummary: analyticsSummary ?? this.analyticsSummary,
+      alerts: alerts ?? this.alerts,
+      aiStatus: aiStatus ?? this.aiStatus,
+      predictions: predictions ?? this.predictions,
+      observation: observation ?? this.observation,
+      action: action ?? this.action,
+      selectedLine: selectedLine ?? this.selectedLine,
+      selectedArea: selectedArea ?? this.selectedArea,
+      selectedType: selectedType ?? this.selectedType,
+      selectedHazardKind: selectedHazardKind ?? this.selectedHazardKind,
+      selectedDetailedKind: selectedDetailedKind ?? this.selectedDetailedKind,
+      selectedLevel: selectedLevel ?? this.selectedLevel,
+      selectedRespDept: selectedRespDept ?? this.selectedRespDept,
+      assignedTo: assignedTo ?? this.assignedTo,
+      currentVector: currentVector ?? this.currentVector,
+      duplicateWarning: duplicateWarning ?? this.duplicateWarning, // Nullable update logic requires care if you want to clear it, passing null here keeps existing. 
+      // specific logic: if duplicateWarning is passed as null, it means keep existing. 
+      // If you want to clear it, pass an empty string and handle it, or use a specific wrapper.
+      // For simplicity here: standard copyWith.
+      isDuplicateSuspect: isDuplicateSuspect ?? this.isDuplicateSuspect,
+      submissionStatus: submissionStatus ?? this.submissionStatus,
+    );
+  }
+  
+  // Custom copyWith to allow clearing nullable fields explicitly if needed
+  StateHome resetForm() {
+    return StateHome(
+      status: HomeStatus.initial,
+      errorMessage: null,
+      isArabic: isArabic,
+      tabIndex: tabIndex,
+      analyticsStatus: AnalyticsStatus.initial,
+      analyticsSummary: analyticsSummary, // Keep analytics
+      alerts: alerts,
+      aiStatus: AiStatus.initial,
+      predictions: null,
+      currentVector: null,
+      duplicateWarning: null,
+      isDuplicateSuspect: false,
+      submissionStatus: SubmissionStatus.initial,
+      observation: '',
+      action: '',
+      selectedLine: null,
+      selectedArea: null,
+      selectedType: null,
+      selectedHazardKind: null,
+      selectedDetailedKind: null,
+      selectedLevel: null,
+      selectedRespDept: null,
+      assignedTo: null,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        status,
+        errorMessage,
+        isArabic,
+        tabIndex,
+        analyticsStatus,
+        analyticsSummary,
+        alerts,
+        observation,
+        action,
+        selectedLine,
+        selectedArea,
+        selectedType,
+        selectedHazardKind,
+        selectedDetailedKind,
+        selectedLevel,
+        selectedRespDept,
+        assignedTo,
+        aiStatus,
+        predictions,
+        currentVector,
+        duplicateWarning,
+        isDuplicateSuspect,
+        submissionStatus,
+      ];
+}
+
+class CubitHome extends Cubit<StateHome> with LogMixin{
+  
+  final  _analyticsService = sl<ServiceAnalytics>();
+  final  _atrService = sl<AtrService>();
+  final  _aiService = sl<ServiceAI>();
+  
+  CubitHome()  : super(StateHome());
+
+  String t(String key) {
+            Map<String, Map<String, String>> vocab = {
+              'app_title': {'en': 'Safety Portal', 'ar': 'بوابة السلامة'},
+              'nav_home': {'en': 'Report', 'ar': 'تقرير'},
+              'nav_analytics': {'en': 'Analytics', 'ar': 'التحليلات'},
+              'nav_profile': {'en': 'Profile', 'ar': 'الملف الشخصي'},
+              'lbl_line': {'en': 'Line / Location', 'ar': 'الخط / الموقع'},
+              'lbl_area': {'en': 'Area', 'ar': 'المنطقة'},
+              'lbl_dept': {'en': 'Responsibility', 'ar': 'القسم المسؤول'},
+              'lbl_obs': {
+                'en': 'Observation Description',
+                'ar': 'وصف الملاحظة'
+              },
+              'lbl_action': {
+                'en': 'Action Taken (Optional)',
+                'ar': 'الإجراء المتخذ (اختياري)'
+              },
+              'btn_submit': {'en': 'Submit Report', 'ar': 'إرسال التقرير'},
+              'ai_analyzing': {'en': 'AI Analyzing...', 'ar': 'جاري التحليل...'},
+              'ai_duplicate': {
+                'en': 'Potential Duplicate Found!',
+                'ar': 'تم العثور على بلاغ مشابه!'
+              },
+              'sec_ai_results': {
+                'en': 'AI Suggestions',
+                'ar': 'اقتراحات الذكاء الاصطناعي'
+              },
+              'stat_total': {'en': 'Total Reports', 'ar': 'إجمالي البلاغات'},
+              'stat_risk': {'en': 'Avg Risk Level', 'ar': 'متوسط المخاطر'},
+              'guest': {'en': 'Guest User', 'ar': 'زائر'},
+              'logout': {'en': 'Logout', 'ar': 'تسجيل خروج'},
+              'lang_btn': {'en': 'عربي', 'ar': 'English'},
+              'msg_fill_req' : {'en': 'please fill all required fields', 'ar': 'الرجاء ملء جميع الحقول المطلوبة'},
+            };
+            return vocab[key]?[state.isArabic ? 'ar' : 'en'] ?? key;
+          }
+
+  void setTab(int index) => emit(state.copyWith(tabIndex: index));
+  void setArabic(bool value) => emit(state.copyWith(isArabic: value));
+
+  /// Loads the main dashboard analytics (Charts, Leaderboard, etc.)
+  /// Uses the unified analytics service to fetch everything in one go.
+  Future<void> loadDashboard() async {
+    try {
+      emit(state.copyWith(status: HomeStatus.loading));
+      final summary = await _analyticsService.getUnifiedAnalytics();
+      
+      emit(state.copyWith(status: HomeStatus.success, analyticsSummary: summary));
+    } catch (e) {
+      emit(state.copyWith(status: HomeStatus.failure, errorMessage: "Failed to load dashboard: $e"));
+    }
+  }
+  
+  Future<void> analyzeTrends() async {
+
+    // 1. Simulate fetching real history from your DB
+    // [Week1, Week2, Week3, Week4] counts per area
+    // In real app: await database.getLast4WeeksCounts();
+    List<List<double>> realHistory = [
+      [2, 5, 0], // Week 1 (Coal Mill, Cement Mill, Packing)
+      [3, 4, 0], // Week 2
+      [2, 6, 1], // Week 3
+      [3, 5, 0], // Week 4
+    ];
+
+    // 2. Ask AI for next week
+    var predictions = await _aiService.repoForecaster.predictNextWeek(realHistory);
+
+    // 3. Combine into Trend Objects
+    List<TrendAnalysis> results = [];
+    
+    // Hardcoded area names for demo matching the index
+    // Ideally this comes from your area_map.json
+
+    for (int i = 0; i < areas.length; i++) {
+      List<double> areaHistory = [
+        realHistory[0][i], 
+        realHistory[1][i], 
+        realHistory[2][i], 
+        realHistory[3][i]
+      ];
+      
+      results.add(TrendAnalysis(areas[i], areaHistory, predictions[areas[i]] ?? 0.0));
+    }
+
+    // 4. Filter: Only show "Rising Risks" (Proactive Approach)
+    final resultsFiltered =results.where((t) => t.isCritical || t.trendPercentage > 0).toList();
+    emit(state.copyWith(alerts: resultsFiltered));
+  }
+  /// Runs AI analysis on the observation text.
+  /// 
+  /// [text] - The observation description.
+  /// [line] & [area] - Context required for better embedding accuracy.
+  Future<void> analyzeText(String text, {required String line, required String area}) async {
+    if (text.isEmpty) return;
+
+    try {
+      // We do NOT emit HomeLoading here to avoid flickering the whole screen 
+      // while the user is typing. The UI should show a local spinner/indicator.
+      
+      emit(state.copyWith(aiStatus: AiStatus.analyzing));
+      final results = await _aiService.analyzeFull(text, line: line, area: area);
+      
+      // Emit a specific success state that the UI listener can react to
+      // (e.g., auto-filling dropdowns).
+      emit(state.copyWith(
+        status: HomeStatus.success, 
+        aiStatus: AiStatus.success, 
+        predictions:results, 
+        currentVector : results['embedding'] as List<double>?
+      ));
+      
+      // After handling the analysis, if we have cached data, we might want to 
+      // revert to HomeLoaded or stay in a "Ready" state. 
+      // For now, staying in AnalysisSuccess allows the UI to read the data.
+    } catch (e) {
+      // Silent error or specific error state that doesn't break the dashboard
+      emit(state.copyWith(status: HomeStatus.failure, errorMessage: "AI Analysis failed: $e"));
+    }
+  }
+
+  // reportform   
+  Timer? _debounce;
+
+  void resetForm() {
+    emit(state.resetForm());
+  }
+
+  void resetSubmissionStatus() {
+    emit(state.copyWith(submissionStatus: SubmissionStatus.initial));
+  }
+
+  // Field Updates
+  void updateLine(String? value) => emit(state.copyWith(selectedLine: value));
+  
+  void updateArea(String? value) {
+    emit(state.copyWith(selectedArea: value));
+    // Trigger AI if observation already exists and Area changes
+    if (state.observation.isNotEmpty) _triggerAIAnalysis(state.observation);
+  }
+  
+  void updateType(String? value) => emit(state.copyWith(selectedType: value));
+  void updateHazardKind(String? value) => emit(state.copyWith(selectedHazardKind: value));
+  void updateDetailedKind(String? value) => emit(state.copyWith(selectedDetailedKind: value));
+  void updateLevel(String? value) => emit(state.copyWith(selectedLevel: value));
+  void updateRespDept(String? value) => emit(state.copyWith(selectedRespDept: value));
+  void updateAssignedTo(String? value) => emit(state.copyWith(assignedTo: value));
+  void updateAction(String value) => emit(state.copyWith(action: value));
+
+  void updateObservation(String text) {
+    emit(state.copyWith(observation: text));
+
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 1500), () {
+      if (text.isNotEmpty && (state.selectedArea != null && text.length > 5)) {
+        _triggerAIAnalysis(text);
+      }
+    });
+  }
+
+      // --- CONFIRMATION & SUBMISSION FLOW ---
+
+  // Step 1: Validate and Prepare
+  void handlePreSubmit() async {
+    // 1. Basic Validation
+    if (state.observation.isEmpty) {
+      emit(state.copyWith(errorMessage: t('msg_fill_req')));
+      return;
+    }
+    emit(state.copyWith(submissionStatus: SubmissionStatus.submitting));
+    // 2. Ensure AI Analysis is done if fields are missing
+    if (state.selectedType == null || state.selectedHazardKind == null || state.selectedLevel == null) {
+      await _triggerAIAnalysis(state.observation);
+    }
+    // 3. Show Confirmation Dialog
+    emit(state.copyWith(submissionStatus: SubmissionStatus.showConfirmation));
+  }
+    /// Checks existing records in Firebase for similarity to _currentVector
+  Future<Map<String, dynamic>?> checkForDuplicate() async {
+    try {
+
+      // 1. Fetch last 50 reports (Optimization: Don't fetch all history)
+      final data = await _atrService.getAtrs(limit: 50);
+      
+      if (data.isEmpty) return null;
+      if (state.currentVector == null) return null;
+
+
+      Map<dynamic, dynamic> reports = {};
+      for (int i = 0; i < data.length; i++) {
+        reports[i.toString()] = data[i];
+      }
+
+      double maxSimilarity = 0.0;
+      ModelAtr? duplicateCandidate;
+
+      // 2. Iterate and compare vectors
+      for (var entry in reports.entries) {
+        final ModelAtr record = entry.value;
+        final List<double>? recordVector = record.vector;
+        if (recordVector != null) {
+          // Compare
+          double similarity = ServiceAI().duplicateDetector.calculateSimilarity(state.currentVector!, recordVector);
+          
+          // Threshold: 0.85 (85%) similarity
+          if (similarity > 0.85 && similarity > maxSimilarity) {
+            maxSimilarity = similarity;
+            duplicateCandidate = record;
+          }
+        }
+      }
+      if (duplicateCandidate != null) {
+        return {'atr': duplicateCandidate, 'similarity': maxSimilarity};
+      }
+      return null;
+
+    } catch (e) {
+      logError("Duplicate check error: $e");
+      return null;
+    }
+  }
+  // Step 3: Final Save
+    
+  Future<void> finalizeSubmission() async {
+    if (state.selectedArea == null || state.observation.isEmpty) {
+      emit(state.copyWith(errorMessage: "Please fill in Area and Observation"));
+      return;
+    }
+
+    emit(state.copyWith(submissionStatus: SubmissionStatus.submitting ));
+
+    try {
+      final model = ModelAtr(
+        line: state.selectedLine,
+        area: state.selectedArea,
+        observation: state.observation,
+        action: state.action,
+        status: 'Pending',
+        issueDate: DateTime.now().toIso8601String(),
+        type: state.selectedType ?? "Unsafe_Condition",
+        hazardKind: state.selectedHazardKind ?? "General",
+        detailedKind: state.selectedDetailedKind ?? "Other",
+        level: state.selectedLevel ?? "Low",
+        respDepartment: state.selectedRespDept ?? "Safety",
+        depPersonExecuter: state.assignedTo ?? "Unassigned",
+        vector: state.currentVector,
+        reporter: FirebaseAuth.instance.currentUser?.email ?? "Anonymous",
+        isDuplicateSuspect: state.duplicateWarning != null,
+      );
+
+      await _atrService.addAtr(model);
+
+      emit(state.copyWith(
+        submissionStatus: SubmissionStatus.success,
+        isDuplicateSuspect:false, 
+        //successMessage: "Report Submitted Successfully!",
+      ));
+      
+      // Reset after success
+      resetForm();
+      
+    } catch (e) {
+      emit(state.copyWith(submissionStatus: SubmissionStatus.failure, errorMessage: "Submission Failed: $e"));
+    }
+  }
+  // analysis
+  Future<void> _triggerAIAnalysis(String text) async {
+    if (state.selectedLine == null || state.selectedArea == null) return;
+    
+    emit(state.copyWith(analyticsStatus: AnalyticsStatus.loading));
+    
+    try {
+      final results = await _aiService.analyzeFull(
+        text,
+        line: state.selectedLine ?? "1",
+        area: state.selectedArea!,
+      );
+
+      final classification = results['classification'] as Map<String, String>;
+      final embedding = results['embedding'] as List<double>?;
+
+      emit(state.copyWith(
+        analyticsStatus: AnalyticsStatus.success,
+        selectedType: classification['type'],
+        selectedHazardKind: classification['hazard_kind'],
+        selectedDetailedKind: classification['detailed_kind'],
+        selectedLevel: classification['level'],
+        selectedRespDept: classification['respDepartment'],
+        action: state.action.isEmpty ? classification['action'] : state.action, // Don't overwrite if user typed
+        currentVector: embedding,
+        duplicateWarning: null,
+      ));
+
+      // Check for duplicates using the new embedding
+      if (embedding != null) {
+        final dupResult = await checkForDuplicate();
+        if (dupResult != null) {
+          final ModelAtr dup = dupResult['atr'];
+          final double score = dupResult['similarity'];
+          final percent = (score * 100).toInt();
+          emit(state.copyWith(duplicateWarning: "Potential duplicate ($percent%): ${dup.observation}"));
+        }
+      }
+    } catch (e) {
+      emit(state.copyWith(analyticsStatus:  AnalyticsStatus.failure, errorMessage: "AI Analysis failed: $e")); 
+      // Silently fail AI or show snackbar via listener
+    }
+  }
+
+  String calculateAvgRisk(ModelAnalyticsSummary data) {
+    if (data.areaRisks.isEmpty) return "0.0";
+    double total = 0;
+    for (var r in data.areaRisks) {
+      total += r.avgSeverity;
+    }
+    return (total / data.areaRisks.length).toStringAsFixed(1);
+  }
+
+}

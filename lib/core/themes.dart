@@ -1,8 +1,42 @@
 import 'package:flutter/material.dart';
 import 'app_typography.dart';
 
+
+
+class AppColors {
+  static const primary = Color(0xFF6750A4);
+    static const Color secondary = Color(0xFFFFC107);
+
+  static const personal = Color(0xFF00796B);
+  static const surface = Color(0xFFF6F8FA);
+  static const background = Color(0xFFF4F7F6);
+  static const onSurface = Color(0xFF1C1B1F);
+  static const danger = Color(0xFFdc3545);
+  static const warning = Color(0xFFffc107);
+  static const info = Color(0xFF0dcaf0);
+  static const purple = Color(0xFF6f42c1);
+  static const darkBlue = Color(0xFF0d6efd);
+
+  static const Color error = Color(0xFFD32F2F);
+  static const Color success = Color(0xFF388E3C);
+  static const Color textDark = Color(0xFF2D3436);
+  static const Color textLight = Color(0xFF636E72);
+
+  static const Color emeraldColor = Color(0xFF50C878);
+
+}
+
+class AppThemes {
+  // A subtle shadow used for cards and containers to give depth
+  static const BoxShadow softShadow = BoxShadow(
+    color: Color(0x1A000000), // Black with low opacity
+    blurRadius: 10,
+    offset: Offset(0, 4),
+    spreadRadius: 0,
+  );
+
 // The single light theme for the entire application, now based on the "Sunset Orange" design.
-final ThemeData lightTheme = ThemeData(
+static final ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   primaryColor: const Color(0xFFFF7043), // Deep Orange
   fontFamily: 'Cairo-Regular',
@@ -64,7 +98,7 @@ final ThemeData lightTheme = ThemeData(
 );
 
 /// The single dark theme for the entire application.
-final ThemeData darkTheme = ThemeData(
+static final ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
   primaryColor: const Color(0xFFFF7043), // Keep the brand orange
   fontFamily: 'Cairo-Regular',
@@ -129,17 +163,4 @@ final ThemeData darkTheme = ThemeData(
   ),
 );
 
-
-class AppColors {
-  static const primary = Color(0xFF6750A4);
-  static const personal = Color(0xFF00796B);
-  static const surface = Color(0xFFF6F8FA);
-  static const background = Color(0xFFF4F7F6);
-  static const onSurface = Color(0xFF1C1B1F);
-  static const success = Color(0xFF20c997);
-  static const danger = Color(0xFFdc3545);
-  static const warning = Color(0xFFffc107);
-  static const info = Color(0xFF0dcaf0);
-  static const purple = Color(0xFF6f42c1);
-  static const darkBlue = Color(0xFF0d6efd);
 }

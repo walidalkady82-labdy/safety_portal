@@ -1,4 +1,10 @@
 import 'package:get_it/get_it.dart';
+import 'package:safety_portal/data/repository/i_repo_realtime.dart';
+import 'package:safety_portal/data/repository/i_repo_storage.dart';
+import 'package:safety_portal/data/repository/repo_realtime.dart';
+import 'package:safety_portal/data/repository/repo_storage.dart';
+import 'package:safety_portal/data/service/service_atr.dart';
+import 'package:safety_portal/data/service/service_storage.dart';
 import '../data/service/service_ai.dart';
 import '../data/service/service_analytics.dart';
 
@@ -18,10 +24,21 @@ Future<void> setupLocator() async {
   // This function is defined in both repo_config_web and repo_config_mobile
   registerPlatformRepositories(sl);
 
+  // The database Service 
+  sl.registerLazySingleton<IRepoRealtime>(() => RepoRealtime.create());
+
+  // The storage Service 
+  sl.registerLazySingleton<IRepoStorage>(() => RepoStorage.create());
+
   // 2. Register Shared Services
   // We use LazySingletons so they only initialize when first used.
   sl.registerLazySingleton<ServiceAnalytics>(() => ServiceAnalytics());
   
   // The AI Service is now a simple aggregator
   sl.registerLazySingleton<ServiceAI>(() => ServiceAI());
+
+  // ATR service
+  sl.registerLazySingleton<AtrService>(() => AtrService(sl<IRepoRealtime>()));
+
+  sl.registerLazySingleton<ServiceStorage>(() => ServiceStorage(sl<IRepoStorage>()));
 }

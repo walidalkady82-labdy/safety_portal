@@ -1,12 +1,12 @@
 class ModelUserData {
-  final String key;
+  final String id;
   final String nameEn;
   final String nameAr;
   final String department;
   final String photoUrl;
 
   ModelUserData({
-    required this.key,
+    required this.id,
     required this.nameEn,
     required this.nameAr,
     required this.department,
@@ -15,7 +15,7 @@ class ModelUserData {
 
   factory ModelUserData.fromMap(String key, Map<dynamic, dynamic> data) {
     return ModelUserData(
-      key: key,
+      id: key,
       nameEn: (data['nameEn'] ?? data['name'] ?? "").toString(),
       nameAr: (data['nameAr'] ?? "").toString(),
       department: (data['department'] ?? "").toString(),

@@ -31,8 +31,15 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        //tensorflow need:  This ensures the app only builds for architectures that support Select Ops
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+        }
     }
-
+    //tensorflow need: 
+    configurations.all {
+        resolutionStrategy.force 'org.tensorflow:tensorflow-lite-select-tf-ops:2.14.0'
+    }    
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
@@ -44,4 +51,10 @@ android {
 
 flutter {
     source = "../.."
+}
+dependencies {
+    // Standard TFLite
+    implementation 'org.tensorflow:tensorflow-lite:2.14.0'
+    // MANDATORY: Add this for LSTM support
+    implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:2.14.0'
 }

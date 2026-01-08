@@ -1,128 +1,111 @@
 import 'dart:convert';
+// ignore_for_file: avoid_web_libraries_in_flutter
+//import 'dart:js_util' as js_util;
 import 'dart:math';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:js_util' as js;
 import 'dart:typed_data';
+
 import 'package:flutter/services.dart';
+import 'package:tflite_web/tflite_web.dart';
+
 import 'package:safety_portal/core/logger.dart';
 import 'package:safety_portal/data/repository/i_repo_duplicate_detector.dart';
-import 'package:tflite_web/tflite_web.dart';
 
 class RepoDuplicateDetectorWeb with LogMixin implements IRepoDuplicateDetector {
   TFLiteModel? _model;
   Map<String, int>? _vocab;
-  List<String>? _areaLabels;
   bool _isLoaded = false;
   static bool _wasmInitialized = false;
 
-  // Must match MAX_LEN from your Python training script (120)
-  static const int _maxLen = 120; 
-
-  @override bool get isLoaded => _isLoaded;
+  @override
+  bool get isLoaded => _isLoaded;
 
   @override
   Future<void> loadModel() async {
     if (_isLoaded) return;
     try {
-      print("Loading Embedding Model (Web - 64dim)...");
-      
       if (!_wasmInitialized) {
         await TFLiteWeb.initializeUsingCDN();
         _wasmInitialized = true;
       }
 
-      // FIX: Flutter Web serves assets at assets/assets/... 
-      _model = await TFLiteModel.fromUrl('assets/assets/ai/safety_embedding_model.tflite');
-      
-      final vocabData = await rootBundle.loadString('assets/ai/vocab.json');
-      _vocab = Map<String, int>.from(jsonDecode(vocabData));
+      // 1. Load Embedding Model
+      _model = await TFLiteModel.fromUrl('/assets/ai/safety_embedding_model.tflite');
 
-      // Load area labels to map the area string to its training index
-      try {
-        final areaData = await rootBundle.loadString('ai/labels_area.json');
-        _areaLabels = List<String>.from(jsonDecode(areaData));
-      } catch (e) {
-        print("Note: labels_area.json not found, using index 0 for all areas.");
-      }
-      
+      // 2. Load Vocab
+      _vocab = Map<String, int>.from(jsonDecode(await rootBundle.loadString('assets/ai/vocab.json')));
+
       _isLoaded = true;
-      print("✅ Web Embedding Model Loaded successfully.");
+      logInfo("✅ Web Duplicate Detector (64-dim) Loaded.");
     } catch (e) {
-      print("❌ Web Embedding Load Error: $e");
+      logError("❌ Web Duplicate Detector Load Error: $e");
     }
   }
 
-  @override
-  Future<List<double>> getEmbedding(String text, [String? area]) async {
-    if (!_isLoaded) await loadModel();
-    if (_model == null) return [];
+@override
+  Future<List<double>> getEmbedding({
+    required String line,
+    required String area,
+    required String text,
+  }) async {
+    if (!_isLoaded || _model == null) await loadModel();
 
     try {
-      // 1. Prepare Input 1: Text Tokens
-      var tokens = _tokenize(text, _maxLen);
-      final textBuffer = Float32List.fromList(tokens);
+      // 1. Context Injection (Must match Python training logic)
+      String cleanLine = line.toLowerCase().replaceAll('nan', '').replaceAll('_', ' ').trim();
+      String cleanArea = area.toLowerCase().replaceAll('nan', '').replaceAll('_', ' ').trim();
+      String cleanText = text.toLowerCase().replaceAll('nan', '').trim();
       
-      // 2. Prepare Input 2: Area Index
-      // Even if area isn't provided, we MUST provide the second tensor if the model expects it.
-      double areaIdx = 0.0;
-      if (area != null && _areaLabels != null) {
-        int found = _areaLabels!.indexOf(area);
-        if (found != -1) areaIdx = found.toDouble();
-      }
-      final areaBuffer = Float32List.fromList([areaIdx]);
+      String combined = [cleanLine, cleanArea, cleanText]
+          .where((s) => s.isNotEmpty)
+          .join(" ");
 
-      // 3. Run Inference for Multi-Input Model
-      // CRITICAL FIX: We pass a List of length 2 [TextTensor, AreaTensor]
-      final output = _model!.predict<List<dynamic>>([textBuffer, areaBuffer]);
-      
-      // 4. Extract 64-dim vector
-      if (output.isNotEmpty && output[0] is List) {
-        final rawList = output[0] as List;
-        return rawList.map((e) => (e as num).toDouble()).toList();
-      }
+      // 2. Tokenize with 10k Vocab Clamp
+      // 1. Prepare the raw buffer
+      final inputTokens = _tokenize(combined, 120);
+      final inputBuffer = Float32List.fromList(inputTokens);
+
+      // 2. Wrap it in a Tensor object
+      // Shape [1, 120] matches the (None, 120) input expected by the CNN
+      final inputTensor = Tensor(
+        inputBuffer, 
+        shape: [1, 120], 
+        type: TFLiteDataType.float32
+      );
+
+      // 3. Pass the TENSOR to the model, not the list
+      final result =_model!.predict<Tensor>(inputTensor);
+
+      final vectorTensor = result;
+      List<double> vector = vectorTensor.dataSync<Float32List>().toList();
+      return vector;
     } catch (e) {
-      print("⚠️ Web AI Inference Error: $e");
-      return List.filled(64, 0.0);
+      logError("⚠️ Web Embedding Error: $e");
     }
-    
-    return [];
+    return List.filled(128, 0.0);
   }
 
   @override
   double calculateSimilarity(List<double> vecA, List<double> vecB) {
-    if (vecA.length != vecB.length) {
-      print("Similarity Error: Vector length mismatch (${vecA.length} vs ${vecB.length})");
-      return 0.0;
-    }
-    
-    double dot = 0.0;
-    double normA = 0.0;
-    double normB = 0.0;
-    
+    if (vecA.length != vecB.length || vecA.isEmpty) return 0.0;
+    double dot = 0.0, normA = 0.0, normB = 0.0;
     for (int i = 0; i < vecA.length; i++) {
       dot += vecA[i] * vecB[i];
       normA += vecA[i] * vecA[i];
       normB += vecB[i] * vecB[i];
     }
-    
-    if (normA == 0 || normB == 0) return 0;
-    return dot / (sqrt(normA) * sqrt(normB));
+    double similarity = dot / (sqrt(normA) * sqrt(normB));
+    return similarity.isNaN ? 0.0 : similarity;
   }
 
   List<double> _tokenize(String text, int maxLen) {
     if (_vocab == null) return List.filled(maxLen, 0.0);
-    
-    List<String> words = text.toLowerCase().split(RegExp(r'\s+'));
-    List<double> tokens = [];
-    
-    for (String word in words) {
-      if (tokens.length >= maxLen) break;
-      String cleanWord = word.replaceAll(RegExp(r'[^\w\s\u0600-\u06FF]'), '');
-      int? index = _vocab![cleanWord];
-      tokens.add((index ?? 1).toDouble()); 
+    List<String> words = text.split(RegExp(r'\s+'));
+    List<double> tokens = List.filled(maxLen, 0.0);
+    for (int i = 0; i < words.length && i < maxLen; i++) {
+      int index = _vocab![words[i]] ?? 1;
+      if (index >= 10000) index = 1; // CRITICAL: Vocab Clamp
+      tokens[i] = index.toDouble();
     }
-    
-    while (tokens.length < maxLen) tokens.add(0.0);
     return tokens;
   }
 }

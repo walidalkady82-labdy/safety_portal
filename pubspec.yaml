@@ -16,7 +16,7 @@ dependencies:
   firebase_database: ^12.1.1
   # UI & Utilities
   cupertino_icons: ^1.0.8
-  google_fonts: ^6.1.0
+  google_fonts: ^7.0.0
   fl_chart: ^1.1.1
   http: ^1.6.0
   image_picker: ^1.2.1
@@ -27,6 +27,10 @@ dependencies:
   tflite_flutter: ^0.12.1
   # Use tflite_web for Web support
   tflite_web: ^0.4.0
+  flutter_bloc: ^9.1.1
+  equatable: ^2.0.7
+  lucide_icons: ^0.257.0
+  firebase_storage: ^13.0.5
 
 
 dev_dependencies:
@@ -43,11 +47,15 @@ flutter:
   assets:
     - assets/ai/safety_classifier_model.tflite
     - assets/ai/safety_embedding_model.tflite
+    - assets/ai/safety_forecaster.tflite
     - assets/ai/vocab.json
+    - assets/ai/labels_action.json
+    - assets/ai/labels_dept.json
+    - assets/ai/labels_detailed_kind.json
     - assets/ai/labels_hazard.json
-    - assets/ai/labels_elec.json
     - assets/ai/labels_level.json
-    - assets/ai/labels_area.json
+    - assets/ai/labels_type.json
+    - assets/ai/area_map.json
     - assets/images/
   fonts:
     - family: Roboto

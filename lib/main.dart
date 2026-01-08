@@ -3,14 +3,16 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart' show kDebugMode,defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:safety_portal/core/themes.dart';
 import 'package:safety_portal/data/model/model_user_data.dart';
 import 'package:safety_portal/locator.dart';
 import 'package:safety_portal/presentation/auth/auth_wrapper.dart';
 import 'firebase_options.dart';
+import 'presentation/home/cubit_home.dart';
+import 'presentation/home/screen_spredict.dart' hide AuthWrapper;
 
-List<ModelUserData> globalUsers = [];
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,7 +59,7 @@ void main() async {
   }
   await setupLocator();
   await sl.allReady();
-  runApp(const MaintenancePortalApp());
+  runApp(MaintenancePortalApp());
 }
 
   Map<String, dynamic> convertToMap(dynamic value) {
@@ -78,42 +80,62 @@ class MaintenancePortalApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Titan Safety Portal',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primary,
-          primary: AppColors.primary,
-          secondary: AppColors.personal,
-          surface: Colors.white,
-          background: AppColors.background,
-        ),
-        scaffoldBackgroundColor: AppColors.background,
-        cardTheme: const CardThemeData(
-          elevation: 2,
-          shadowColor: Colors.black12,
-          margin: EdgeInsets.symmetric(vertical: 6),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
-          color: Colors.white,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-          ),
-        ),
+    return MultiBlocProvider(
+       providers: [
+        BlocProvider(create: (_) => LocaleCubit()),
+        BlocProvider(create: (_) => AuthCubit()),
+        // DataCubit now uses 'sl<AtrService>()' internally
+        BlocProvider(create: (_) => DataCubit()), 
+        // ReportCubit uses 'sl<ServiceAI>()'
+        BlocProvider(create: (_) => ReportCubit()),
+        // ForecastCubit uses 'sl<ServiceAI>()'
+        BlocProvider(create: (_) => ForecastCubit()),
+      ],
+      child: BlocBuilder<LocaleCubit, String>(
+        builder: (context, lang) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Titan Safety Portal',
+            theme: ThemeData(
+              useMaterial3: true,
+              fontFamily: lang == 'ar' ? 'Cairo' : 'Inter',
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: const Color(0xFF2563EB),
+                primary: AppColors.primary,
+                secondary: AppColors.personal,
+                surface: Colors.white,
+                background: AppColors.background,
+              ),
+              scaffoldBackgroundColor: AppColors.background,
+              cardTheme: const CardThemeData(
+                elevation: 2,
+                shadowColor: Colors.black12,
+                margin: EdgeInsets.symmetric(vertical: 6),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
+                color: Colors.white,
+              ),
+              inputDecorationTheme: InputDecorationTheme(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              ),
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+              ),
+            ),
+            home: Directionality(
+                    textDirection: lang == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+                    child: const AuthWrapper(),
+                  ),
+          );
+        }
       ),
-      home: const AuthWrapper(),
     );
   }
 }

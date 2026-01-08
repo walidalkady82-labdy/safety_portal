@@ -1,0 +1,14 @@
+{
+    "Kiln": 0,
+    "Raw Mill": 1,
+    "Cement Mill": 2,
+    "Packing": 3,
+    "Crusher": 4,
+    "Yard": 5,
+    "Quarry": 6,
+    "Workshop": 7,
+    "Lab": 8,
+    "Utility": 9,
+    "CCR": 10,
+    "General": 11
+}

@@ -1,0 +1,403 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:math';
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:safety_portal/core/logger.dart';
+
+import 'package:safety_portal/data/model/model_atr.dart';
+import 'package:safety_portal/data/service/service_ai.dart';
+import 'package:safety_portal/data/service/service_atr.dart';
+import 'package:safety_portal/data/service/service_storage.dart';
+import 'package:safety_portal/locator.dart'; 
+
+// --- LOCALE CUBIT ---
+class LocaleCubit extends Cubit<String> {
+  LocaleCubit() : super('en');
+  void toggleLanguage() => emit(state == 'en' ? 'ar' : 'en');
+}
+
+// --- AUTH CUBIT ---
+class AuthCubit extends Cubit<User?> {
+  AuthCubit() : super(null);
+  String get currentUserName => state?.displayName ?? "Ahmed Hassan";
+
+  Future<void> login(String email, String password) async {
+    try {
+      if (FirebaseAuth.instance.app.options.apiKey.isNotEmpty) {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+      }
+    } catch (e) {
+      print("Login error: $e");
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print("Logout Error: $e");
+    }
+  }
+  
+  void setUser(User? user) => emit(user);
+}
+
+// --- DATA CUBIT ---
+class DataCubit extends Cubit<List<ModelAtr>> {
+  final AtrService _atrService = sl<AtrService>();
+  StreamSubscription? _subscription;
+
+  DataCubit() : super([]) {
+    _init();
+  }
+
+  void _init() {
+    // Listen to real-time updates from Firebase
+    _subscription = _atrService.getAtrStream(limit: 100).listen((data) {
+      emit(data);
+    });
+  }
+
+  @override
+  Future<void> close() {
+    _subscription?.cancel();
+    return super.close();
+  }
+}
+
+// --- REPORT CUBIT ---
+class ReportState {
+  final double quality;
+  final List<String> interventions;
+  final String? smartSolution;
+  final String? predictedDept;
+  final String? predictedRisk;
+  final bool isSubmitting;
+  final bool isDuplicateWarning;
+  final String? error;
+  final XFile? selectedImage; // Holds the picked image
+  final bool isSuccess;
+
+  ReportState({
+    this.quality = 0.0, 
+    this.interventions = const [], 
+    this.smartSolution,
+    this.predictedDept,
+    this.predictedRisk,
+    this.isSubmitting = false, 
+    this.isDuplicateWarning = false,
+    this.error,
+    this.selectedImage,
+    this.isSuccess = false,
+  });
+
+  ReportState copyWith({
+    double? quality,
+    List<String>? interventions,
+    String? smartSolution,
+    String? predictedDept,
+    String? predictedRisk,
+    bool? isSubmitting,
+    bool? isDuplicateWarning,
+    String? error,
+    XFile? selectedImage,
+    bool? isSuccess,
+  }) {
+    return ReportState(
+      quality: quality ?? this.quality,
+      interventions: interventions ?? this.interventions,
+      smartSolution: smartSolution ?? this.smartSolution,
+      predictedDept: predictedDept ?? this.predictedDept,
+      predictedRisk: predictedRisk ?? this.predictedRisk,
+      isSubmitting: isSubmitting ?? this.isSubmitting,
+      isDuplicateWarning: isDuplicateWarning ?? this.isDuplicateWarning,
+      error: error,
+      selectedImage: selectedImage ?? this.selectedImage,
+      isSuccess: isSuccess ?? this.isSuccess,
+    );
+  }
+}
+
+class ReportCubit extends Cubit<ReportState> with LogMixin{
+  final ServiceAI _ai = sl<ServiceAI>();
+  final AtrService _atr = sl<AtrService>();
+  final _storage = sl<ServiceStorage>();
+  final ImagePicker _picker = ImagePicker();
+
+  ReportCubit() : super(ReportState());
+
+  // --- Image Handling ---
+
+  Future<void> pickImage(ImageSource source) async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: source,
+        maxWidth: 1024, // Resize for optimization
+        imageQuality: 80,
+      );
+      if (image != null) {
+        // Reset specific UI states but keep others? Or just update image?
+        // Usually safer to just update the image field.
+        emit(state.copyWith(selectedImage: image, isSuccess: false));
+      }
+    } catch (e) {
+      print("Image Picker Error: $e");
+      emit(state.copyWith(error: "Failed to pick image"));
+    }
+  }
+
+  void clearImage() {
+    // Force selectedImage to null by reconstructing state manually 
+    // (since copyWith usually ignores nulls if we use ?? syntax, dependent on implementation)
+    // To be safe with the copyWith above:
+    // We need to pass a specific indicator or just emit a new state object.
+    emit(ReportState(
+      quality: state.quality,
+      interventions: state.interventions,
+      smartSolution: state.smartSolution,
+      predictedDept: state.predictedDept,
+      predictedRisk: state.predictedRisk,
+      isSubmitting: state.isSubmitting,
+      isDuplicateWarning: state.isDuplicateWarning,
+      error: state.error,
+      selectedImage: null, 
+    ));
+  }
+
+  void resetSuccess() => emit(state.copyWith(isSuccess: false));
+
+  // --- AI Analysis ---
+
+  Future<void> analyzeText(String line, String area, String text) async {
+    // 1. Basic Validation
+    if (text.length < 5) {
+      emit(state.copyWith(quality: 0.0, isSuccess: false));
+      return;
+    }
+
+    // 2. Heuristic Quality Score
+    double quality = (text.length / 60.0).clamp(0.0, 1.0);
+
+    try {
+      // 3. TF-Lite Classification
+      final prediction = await _ai.classifier.predict(line: line, area: area, text: text);
+      
+      final bestActionClass = prediction['action'];
+      final predDept = prediction['respDepartment'];
+      final predRisk = prediction['level'];
+      
+      List<String> suggestions = [];
+      if (bestActionClass != null && bestActionClass != "Unknown") {
+        suggestions.add("Class: $bestActionClass");
+      }
+
+      // 4. Semantic Search (RAG)
+      bool isDuplicate = false;
+      String? provenSolution;
+
+      if (text.length > 10) {
+        try {
+          final recentReports = await _atr.getAtrs(limit: 50);
+          final currentEmbedding = await _ai.duplicateDetector.getEmbedding(line: line, area: area, text: text);
+          
+          double highestSimilarity = 0.0;
+          ModelAtr? bestMatch;
+
+          for (var report in recentReports) {
+            if (report.vector != null && report.vector!.isNotEmpty) {
+              double similarity = _ai.duplicateDetector.calculateSimilarity(currentEmbedding, report.vector!);
+              if (similarity > highestSimilarity) {
+                highestSimilarity = similarity;
+                bestMatch = report;
+              }
+            }
+          }
+
+          if (highestSimilarity > 0.90) {
+            isDuplicate = true;
+          } else if (highestSimilarity > 0.70 && bestMatch?.status == 'Closed') {
+            if (bestMatch?.action.isNotEmpty == true) {
+              provenSolution = "Past Solution: ${bestMatch!.action}";
+            }
+          }
+        } catch (e) {
+          logError("Semantic Search Error: $e");
+        }
+      }
+
+      emit(state.copyWith(
+        quality: quality, 
+        interventions: suggestions,
+        smartSolution: provenSolution,
+        predictedDept: predDept,
+        predictedRisk: predRisk,
+        isDuplicateWarning: isDuplicate,
+        isSuccess: false,
+      ));
+
+    } catch (e) {
+      logError("AI Analysis Error: $e");
+      emit(state.copyWith(quality: quality, isSuccess: false));
+    }
+  }
+
+  // --- Submission ---
+
+  Future<void> submitReport(ModelAtr newObservation) async {
+    emit(state.copyWith(isSubmitting: true));
+
+    try {
+      var finalObs = newObservation;
+      
+      // 1. Upload Image (if exists)
+      String? uploadedImageUrl;
+      final selectedImage = state.selectedImage;
+      if (selectedImage != null) {
+        try {
+          _storage.uploadAtrImage(newObservation.id??"", selectedImage);
+        } catch (e) {
+          print("Image upload failed: $e");
+          // Depending on requirements, we might want to fail here or continue without image.
+          // For now, we continue.
+        }
+      }
+
+      // 2. Generate Embedding
+      List<double> vector = [];
+      try {
+        vector = await _ai.duplicateDetector.getEmbedding(line: newObservation.line??"", area: newObservation.area??"", text: newObservation.observation);
+      } catch (e) {
+        logInfo("Embedding generation failed: $e");
+      }
+
+      // 3. Intelligent Auto-Fill & Construction
+      if (newObservation.type == "Pending AI" || newObservation.type == null) {
+        final prediction = await _ai.classifier.predict(line: newObservation.line??"", area: newObservation.area??"", text: newObservation.observation);
+        
+        finalObs = newObservation.copyWith(
+          type: prediction['type'],
+          hazardKind: prediction['hazard_kind'],
+          level: prediction['level'],
+          detailedKind: prediction['detailed_kind'],
+          action: (newObservation.action.isEmpty) ? prediction['action'] : newObservation.action,
+          respDepartment: (newObservation.respDepartment == null) ? prediction['respDepartment'] : newObservation.respDepartment,
+          vector: vector,
+          isDuplicateSuspect: state.isDuplicateWarning,
+          imageUrl: uploadedImageUrl, // Attach Image URL
+        );
+      } else {
+        finalObs = newObservation.copyWith(
+          vector: vector, 
+          isDuplicateSuspect: state.isDuplicateWarning,
+          imageUrl: uploadedImageUrl, // Attach Image URL
+        );
+      }
+
+      // 4. Save to Database
+      await _atr.addAtr(finalObs);
+      
+      // 5. Reset State (Clear form and image)
+      // Re-emitting a fresh state clears everything.
+      emit(ReportState(isSuccess: true)); 
+      
+    } catch (e) {
+      emit(state.copyWith(isSubmitting: false, error: e.toString()));
+    }
+  }
+}
+
+
+
+// --- FORECAST CUBIT ---
+class ForecastState {
+  final bool isLoading;
+  final Map<String, double> risks;
+  ForecastState({this.isLoading = false, this.risks = const {}});
+}
+
+class ForecastCubit extends Cubit<ForecastState> with LogMixin {
+  final ServiceAI _ai = sl<ServiceAI>();
+  final AtrService _atr = sl<AtrService>();
+  Map<String, int> _areaMap = {};
+
+  ForecastCubit() : super(ForecastState()) {
+    loadForecast();
+  }
+
+  Future<void> loadForecast() async {
+    emit(ForecastState(isLoading: true));
+    try {
+      // Load area map first
+      await _loadAreaMap();
+
+      // Fetch recent history
+      final reports = await _atr.getAtrs(limit: 500);
+      
+      // Process data for the model
+      final inputMatrix = _aggregateDataForModel(reports);
+      
+      // Run Inference
+      final risks = await _ai.repoForecaster.predictNextWeek(inputMatrix); 
+      
+      emit(ForecastState(isLoading: false, risks: risks));
+    } catch (e) {
+      logError("Forecast Error: $e");
+      emit(ForecastState(isLoading: false));
+    }
+  }
+
+  Future<void> _loadAreaMap() async {
+    try {
+      final jsonString = await rootBundle.loadString('assets/ai/area_map.json');
+      final jsonMap = json.decode(jsonString) as Map<String, dynamic>;
+      _areaMap = jsonMap.map((key, value) => MapEntry(key, value as int));
+    } catch (e) {
+      logError("Failed to load area_map.json: $e");
+      // Use a default or empty map if loading fails
+      _areaMap = {
+        "General": 0, "Production": 1, "Mechanical": 2, "Electrical": 3,
+        "Quality": 4, "Stores": 5, "Safety": 6, "Environment": 7,
+        "Logistics": 8, "Admin": 9, "Utilities": 10, "Other": 11
+      };
+    }
+  }
+
+  /// Aggregates reports into [4 weeks x 12 areas]
+  List<List<double>> _aggregateDataForModel(List<ModelAtr> reports) {
+    // 4 time steps (weeks), 12 features (areas)
+    List<List<double>> matrix = List.generate(4, (_) => List.filled(12, 0.0));
+    final now = DateTime.now();
+
+    for (var r in reports) {
+      if (r.issueDate.isEmpty) continue;
+      try {
+        final date = DateTime.parse(r.issueDate);
+        final diff = now.difference(date).inDays;
+        
+        // We only care about the last 28 days
+        if (diff < 28 && diff >= 0) {
+          int weekIndex = (diff / 7).floor(); // 0 is most recent
+          int timeStep = 3 - weekIndex; // Model expects oldest first
+          
+          if (timeStep >= 0 && timeStep < 4) {
+             final areaName = r.area ?? "General";
+             final areaIndex = _areaMap[areaName] ?? _areaMap["General"] ?? 0;
+             
+             if (areaIndex >= 0 && areaIndex < 12) {
+               matrix[timeStep][areaIndex] += 1.0;
+             }
+          }
+        }
+      } catch (e) {
+        // Ignore date parse errors
+      }
+    }
+    return matrix;
+  }
+}

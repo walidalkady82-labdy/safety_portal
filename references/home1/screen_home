@@ -1,0 +1,537 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:safety_portal/core/themes.dart';
+import 'package:safety_portal/data/model/model_analitcs_summery.dart';
+import 'package:safety_portal/data/model/model_atr.dart';
+import 'package:safety_portal/data/service/service_atr.dart';
+import 'package:safety_portal/locator.dart';
+import 'package:safety_portal/presentation/auth/auth_wrapper.dart';
+import 'package:safety_portal/presentation/home1/bloc_home.dart';
+import 'widgets/safety_quality_meter.dart';
+import 'widgets/smart_search_delegate.dart';
+
+class ScreenHome extends StatelessWidget {
+  const ScreenHome({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => CubitHome()..loadDashboard(),
+      child: BlocConsumer<CubitHome, StateHome>(
+        listener: (context, state) {
+          if (state.submissionStatus == SubmissionStatus.showConfirmation) {
+            _showConfirmationDialog(context, context.read<CubitHome>().t);
+          }
+          if (state.submissionStatus == SubmissionStatus.success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.isArabic ? "تم الإرسال بنجاح" : "Report Submitted Successfully"))
+            );
+          }
+        },
+        builder: (context, state) {
+          final cubit = context.read<CubitHome>();
+          final textDirection = state.isArabic ? TextDirection.rtl : TextDirection.ltr;
+
+          return Directionality(
+            textDirection: textDirection,
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(cubit.t('app_title'),
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                centerTitle: true,
+                actions: [
+                  IconButton(
+                    onPressed: () => cubit.setArabic(!state.isArabic),
+                    icon: const Icon(Icons.language),
+                    tooltip: "Switch Language",
+                  ),
+                ],
+              ),
+              body: IndexedStack(
+                index: state.tabIndex,
+                children: [
+                  _buildReportTab(context, state, cubit.t),
+                  _buildAnalyticsTab(context, state, cubit.t),
+                  _buildProfileTab(context, state, cubit.t),
+                ],
+              ),
+              bottomNavigationBar: NavigationBar(
+                selectedIndex: state.tabIndex,
+                onDestinationSelected: (i) => cubit.setTab(i),
+                destinations: [
+                  NavigationDestination(
+                      icon: const Icon(Icons.add_circle_outline),
+                      selectedIcon: const Icon(Icons.add_circle),
+                      label: cubit.t('nav_home')),
+                  NavigationDestination(
+                      icon: const Icon(Icons.analytics_outlined),
+                      selectedIcon: const Icon(Icons.analytics),
+                      label: cubit.t('nav_analytics')),
+                  NavigationDestination(
+                      icon: const Icon(Icons.person_outline),
+                      selectedIcon: const Icon(Icons.person),
+                      label: cubit.t('nav_profile')),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // 1. REPORT TAB
+  Widget _buildReportTab(BuildContext context, StateHome state, String Function(String) t) {
+    final cubit = context.read<CubitHome>();
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.security, color: AppColors.primary, size: 32),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    state.isArabic ? "سجل ملاحظة جديدة" : "Log New Observation",
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.search, color: AppColors.primary),
+                  tooltip: state.isArabic ? "بحث عن بلاغات مشابهة" : "Search Similar Reports",
+                  onPressed: () async {
+                    // 1. Show Loading
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (_) => const Center(child: CircularProgressIndicator()),
+                    );
+
+                    try {
+                      // 2. Fetch Data
+                      final reports = await sl<AtrService>().getAtrs(limit: 50);
+                      if (!context.mounted) return;
+                      Navigator.pop(context); // Dismiss Loading
+
+                      // 3. Show Search
+                      final ModelAtr? result = await showSearch<ModelAtr?>(
+                        context: context,
+                        delegate: SmartSearchDelegate(preloadedReports: reports),
+                      );
+
+                      // 4. Handle Selection (Optional: Fill form or show details)
+                      if (result != null && context.mounted) {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: Text(state.isArabic ? "تفاصيل البلاغ" : "Report Details"),
+                            content: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(result.observation, style: const TextStyle(fontSize: 16)),
+                                  const SizedBox(height: 10),
+                                  Text("${state.isArabic ? 'الحالة' : 'Status'}: ${result.status}",
+                                      style: TextStyle(color: Colors.grey[700])),
+                                  Text("${state.isArabic ? 'المنطقة' : 'Area'}: ${result.area}",
+                                      style: TextStyle(color: Colors.grey[700])),
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx),
+                                child: Text(state.isArabic ? "إغلاق" : "Close"),
+                              )
+                            ],
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) Navigator.pop(context); // Ensure loading is dismissed
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          DropdownButtonFormField<String>(
+            value: state.selectedLine,
+            decoration: InputDecoration(labelText: t('lbl_line'), border: const OutlineInputBorder()),
+            items: lines.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+            onChanged: (v) => cubit.updateLine(v),
+          ),
+          const SizedBox(height: 12),
+          DropdownButtonFormField<String>(
+            value: state.selectedArea,
+            decoration: InputDecoration(labelText: t('lbl_area'), border: const OutlineInputBorder()),
+            items: areas.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+            onChanged: (v) => cubit.updateArea(v),
+          ),
+          const SizedBox(height: 12),
+          DropdownButtonFormField<String>(
+            value: state.selectedRespDept,
+            decoration: InputDecoration(labelText: t('lbl_dept'), border: const OutlineInputBorder()),
+            items: departments.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+            onChanged: (v) => cubit.updateRespDept(v),
+          ),
+          const SizedBox(height: 20),
+          TextField(
+            // Create a temporary controller to sync state -> UI while keeping cursor at end
+            controller: TextEditingController(text: state.observation)
+              ..selection = TextSelection.collapsed(offset: state.observation.length),
+            maxLines: 4,
+            decoration: InputDecoration(
+              labelText: t('lbl_obs'),
+              alignLabelWithHint: true,
+              border: const OutlineInputBorder(),
+              suffixIcon: state.aiStatus == AiStatus.analyzing
+                  ? const Padding(padding: EdgeInsets.all(12), child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.mic, color: Colors.grey),
+            ),
+            onChanged: (text) => cubit.updateObservation(text),
+          ),
+          const SizedBox(height: 20),
+          SafetyQualityMeter(
+            observation: state.observation,
+          ),
+          const SizedBox(height: 20),
+          if (state.duplicateWarning != null) ...[
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(color: Colors.orange.shade100, borderRadius: BorderRadius.circular(8)),
+              child: Row(
+                children: [
+                  const Icon(Icons.warning_amber, color: Colors.deepOrange),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(state.duplicateWarning!, style: TextStyle(color: Colors.deepOrange.shade900))),
+                ],
+              ),
+            ),
+          ],
+          if (state.selectedHazardKind != null) ...[
+            const SizedBox(height: 20),
+            Text(t('sec_ai_results'), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                _buildChip(state.selectedType ?? "Type", Colors.blue.shade100, Colors.blue.shade900),
+                _buildChip(state.selectedHazardKind ?? "Hazard", Colors.purple.shade100, Colors.purple.shade900),
+                if (state.selectedDetailedKind != null && state.selectedDetailedKind!.isNotEmpty)
+                  _buildChip(state.selectedDetailedKind!, Colors.indigo.shade100, Colors.indigo.shade900),
+                _buildChip(state.selectedLevel ?? "Level", _getLevelColor(state.selectedLevel), Colors.black87),
+              ],
+            ),
+          ],
+          const SizedBox(height: 20),
+          TextField(
+            controller: TextEditingController(text: state.action)
+              ..selection = TextSelection.collapsed(offset: state.action.length),
+            decoration: InputDecoration(
+              labelText: t('lbl_action'),
+              hintText: state.action.isNotEmpty ? "AI Suggestion: ${state.action}" : null,
+              border: const OutlineInputBorder(),
+            ),
+            onChanged: (text) => cubit.updateAction(text),
+          ),
+          const SizedBox(height: 30),
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary, 
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: state.submissionStatus == SubmissionStatus.submitting
+                  ? null
+                  : () => cubit.handlePreSubmit(),
+              icon: state.submissionStatus == SubmissionStatus.submitting
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)) 
+                  : const Icon(Icons.send),
+              label: Text(state.submissionStatus == SubmissionStatus.submitting ? t('ai_analyzing') : t('btn_submit'), style: const TextStyle(fontSize: 16)),
+            ),
+          ),
+          const SizedBox(height: 40),
+        ],
+      ),
+    );
+  }
+
+  // 2. ANALYTICS TAB
+  Widget _buildAnalyticsTab(BuildContext context, StateHome state, String Function(String) t) {
+    if (state.analyticsStatus == AnalyticsStatus.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.analyticsSummary == null || state.analyticsSummary!.totalReports == 0) {
+      return Center(child: Text(state.isArabic ? "لا توجد بيانات كافية" : "No sufficient data available"));
+    }
+
+    final data = state.analyticsSummary!;
+    final cubit = context.read<CubitHome>();
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(child: _buildStatCard(t('stat_total'), "${data.totalReports}", Icons.assignment)),
+              const SizedBox(width: 12),
+              Expanded(child: _buildStatCard(t('stat_risk'), cubit.calculateAvgRisk(data), Icons.speed)),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Container(
+            height: 300,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)]),
+            child: Column(
+              children: [
+                Text(state.isArabic ? "توزيع الأقسام" : "Department Distribution", style: const TextStyle(fontWeight: FontWeight.bold)),
+                Expanded(
+                  child: PieChart(
+                    PieChartData(
+                      sections: data.deptMetrics.map((dept) {
+                        return PieChartSectionData(
+                          value: dept.pending.toDouble() + dept.closed.toDouble(),
+                          title: dept.name,
+                          radius: 50,
+                          color: _getDeptColor(dept.name),
+                          titleStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
+                        );
+                      }).toList(),
+                      sectionsSpace: 2,
+                      centerSpaceRadius: 40,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)]),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(state.isArabic ? "أعلى المناطق خطورة" : "Top High Risk Areas", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                const SizedBox(height: 10),
+                ...data.areaRisks.take(5).map((risk) => ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: CircleAvatar(backgroundColor: Colors.red.shade100, child: Text("${risk.reportCount}", style: TextStyle(color: Colors.red.shade900))),
+                      title: Text(risk.area),
+                      subtitle: LinearProgressIndicator(value: (risk.totalRiskScore / 50).clamp(0.0, 1.0), color: Colors.red, backgroundColor: Colors.grey.shade200),
+                      trailing: Text(risk.totalRiskScore.toStringAsFixed(0)),
+                    )),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 3. PROFILE TAB
+  Widget _buildProfileTab(BuildContext context, StateHome state, String Function(String) t) {
+    final user = FirebaseAuth.instance.currentUser;
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+              radius: 50,
+              backgroundColor: AppColors.primary.withOpacity(0.1),
+              child: Icon(Icons.person, size: 50, color: AppColors.primary)),
+          const SizedBox(height: 20),
+          Text(user?.email ?? t('guest'),
+              style:
+                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Text("Safety Officer", style: TextStyle(color: Colors.grey.shade600)),
+          const SizedBox(height: 40),
+          ListTile(
+            leading: const Icon(Icons.language),
+            title: Text(state.isArabic ? "تغيير اللغة" : "Change Language"),
+            trailing: Switch(
+                value: state.isArabic,
+                onChanged: (v) => context.read<CubitHome>().setArabic(v)),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.logout, color: Colors.red),
+            title: Text(t('logout'), style: const TextStyle(color: Colors.red)),
+            onTap: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const AuthWrapper()));
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // --- HELPERS ---
+  Widget _buildChip(String label, Color bg, Color text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration:
+          BoxDecoration(color: bg, borderRadius: BorderRadius.circular(20)),
+      child: Text(label,
+          style: TextStyle(
+              color: text, fontSize: 12, fontWeight: FontWeight.bold)),
+    );
+  }
+
+  Widget _buildStatCard(String title, String value, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)]),
+      child: Column(
+        children: [
+          Icon(icon, color: AppColors.primary, size: 28),
+          const SizedBox(height: 8),
+          Text(value,
+              style:
+                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          Text(title, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+        ],
+      ),
+    );
+  }
+
+  // Step 2: Confirmation Dialog
+  void _showConfirmationDialog(BuildContext context, String Function(String) t) {
+    final cubit = context.read<CubitHome>();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext ctx) {
+        final cubit = context.read<CubitHome>();
+        final selectedLine = cubit.state.selectedLine;
+        final selectedArea = cubit.state.selectedArea;
+        final selectedDept = cubit.state.selectedRespDept;
+        final selectedType = cubit.state.selectedType;
+        final selectedHazardKind = cubit.state.selectedHazardKind;
+        final selectedLevel = cubit.state.selectedLevel;
+
+        return AlertDialog(
+          title: Text(t('confirm_title')),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(t('confirm_msg'), style: const TextStyle(color: Colors.grey)),
+                const SizedBox(height: 15),
+                _buildConfirmRow(t('lbl_line'), selectedLine),
+                _buildConfirmRow(t('lbl_area'), selectedArea),
+                _buildConfirmRow(t('lbl_dept'), selectedDept ?? "Safety"), // Default if null
+                const Divider(),
+                _buildConfirmRow(t('lbl_issue'), cubit.state.observation, isLong: true),
+                const Divider(),
+                _buildConfirmRow(t('lbl_type'), selectedType ?? "Unsafe_Condition"),
+                _buildConfirmRow(t('lbl_hazard'), selectedHazardKind ?? "General"),
+                _buildConfirmRow(t('lbl_level'), selectedLevel ?? "Low", isHighlight: true),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: Text(t('btn_cancel'), style: const TextStyle(color: Colors.grey)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
+              onPressed: () async {
+                Navigator.of(ctx).pop(); // Close dialog
+                await cubit.finalizeSubmission();   // Proceed to save
+              },
+              child: Text(t('btn_confirm')),
+            ),
+          ],
+        );
+      },
+    ).then((_) {
+      // Reset status if the dialog was closed without submitting (e.g. Cancel or Back button)
+      // This ensures the listener can trigger again if the user clicks Submit later.
+      if (cubit.state.submissionStatus == SubmissionStatus.showConfirmation) {
+        cubit.resetSubmissionStatus();
+      }
+    });
+  }
+
+  Widget _buildConfirmRow(String label, String? value, {bool isLong = false, bool isHighlight = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        crossAxisAlignment: isLong ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 80, 
+            child: Text(
+              "$label:", 
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            )
+          ),
+          Expanded(
+            child: Text(
+              value ?? "-",
+              style: TextStyle(
+                fontSize: 14,
+                color: isHighlight ? _getLevelColor(value) : Colors.black87,
+                fontWeight: isHighlight ? FontWeight.bold : FontWeight.normal
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getLevelColor(String? level) {
+    switch (level?.toLowerCase()) {
+      case 'high':
+        return Colors.red.shade200;
+      case 'medium':
+        return Colors.orange.shade200;
+      default:
+        return Colors.green.shade200;
+    }
+  }
+
+  Color _getDeptColor(String dept) {
+    final colors = [
+      Colors.blue,
+      Colors.orange,
+      Colors.green,
+      Colors.purple,
+      Colors.teal
+    ];
+    return colors[dept.hashCode % colors.length];
+  }
+
+}
