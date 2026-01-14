@@ -47,7 +47,7 @@ flutter:
   assets:
     - assets/ai/safety_classifier_model.tflite
     - assets/ai/safety_embedding_model.tflite
-    - assets/ai/safety_forecaster.tflite
+    - assets/ai/safety_forecaster_model.tflite
     - assets/ai/vocab.json
     - assets/ai/labels_action.json
     - assets/ai/labels_dept.json
@@ -56,7 +56,9 @@ flutter:
     - assets/ai/labels_level.json
     - assets/ai/labels_type.json
     - assets/ai/area_map.json
+    - assets/ai/safety_forecaster_metadata.json
     - assets/images/
+    - assets/local/lang.csv
   fonts:
     - family: Roboto
       fonts:

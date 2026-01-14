@@ -8,7 +8,6 @@ import 'package:safety_portal/core/themes.dart';
 
 // --- ARCHITECTURE IMPORTS ---
 import 'package:safety_portal/data/model/model_atr.dart';
-import 'package:safety_portal/presentation/home/cubit_home.dart';
 
 // --- TRANSLATIONS DATA ---
 class AppLocale {

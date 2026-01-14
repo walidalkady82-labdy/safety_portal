@@ -1,0 +1,37 @@
+# build runner 
+dart run build_runner build --delete-conflicting-outputs
+# android keystore
+keytool -list -v -keystore "%USERPROFILE%\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
+# wireless debug
+adb pair 192.168.1.4:44297 497181  "of cell phone"
+adb connect 192.168.1.4:44297  "of cell phone"
+
+
+# l10n generrate localizations
+flutter gen-l10n
+
+
+# emulator filter 
+metadata.emulator.name="functions"
+
+# build android apk for release
+
+flutter build apk --release
+
+# netstate
+netstat -ano | findstr :9000
+taskkill /PID 18156 /F
+
+# firebase deploy functions
+firebase deploy --only functions
+
+
+flutter pub upgrade --major-versions
+
+# cleaning sequence
+flutter clean
+flutter pub get
+cd android
+./gradlew clean
+cd ..
+flutter run

@@ -42,7 +42,9 @@ class AtrService {
       });
 
       // Newest first sorting
-      reports.sort((a, b) => b.issueDate.compareTo(a.issueDate));
+      reports.sort((a, b) {
+        return _compareDates(a.issueDate, b.issueDate);
+      });
       return reports;
     });
   }
@@ -57,7 +59,9 @@ class AtrService {
         .map((e) => ModelAtr.fromMap(e.key.toString(), e.value as Map))
         .toList();
     
-    list.sort((a, b) => b.issueDate.compareTo(a.issueDate));
+    list.sort((a, b) {
+      return _compareDates(a.issueDate, b.issueDate);
+    });
     return list;
   }
   /// Fetches reports filtered by area with an optional limit
@@ -72,8 +76,29 @@ class AtrService {
         .map((e) => ModelAtr.fromMap(e.key.toString(), e.value as Map))
         .toList();
     
-    list.sort((a, b) => b.issueDate.compareTo(a.issueDate));
+    list.sort((a, b) {
+      return _compareDates(a.issueDate, b.issueDate);
+    });
     return list;
+  }
+
+  /// Validates the report and sends a notification to the executor
+  Future<void> validateAtr(ModelAtr model) async {
+    final updated = model.copyWith(status: 'validated');
+    await updateAtr(updated);
+    await _sendNotification(updated);
+  }
+
+  Future<void> _sendNotification(ModelAtr model) async {
+    final notifId = await _repo.generateId('notifications');
+    await _repo.set('notifications', notifId, {
+      'userId': model.depPersonExecuter,
+      'title': 'Safety Action Assigned',
+      'body': 'A new safety issue has been validated and assigned to you.',
+      'atrId': model.id,
+      'timestamp': DateTime.now().toIso8601String(),
+      'isRead': false,
+    });
   }
 
   Map<dynamic, dynamic> _parseData(dynamic value) {
@@ -83,5 +108,11 @@ class AtrService {
       return {for (int i = 0; i < value.length; i++) if (value[i] != null) i.toString(): value[i]};
     }
     return {};
+  }
+
+  int _compareDates(String? dateA, String? dateB) {
+    final dtA = (dateA != null && dateA.isNotEmpty) ? (DateTime.tryParse(dateA) ?? DateTime(0)) : DateTime(0);
+    final dtB = (dateB != null && dateB.isNotEmpty) ? (DateTime.tryParse(dateB) ?? DateTime(0)) : DateTime(0);
+    return dtB.compareTo(dtA);
   }
 }

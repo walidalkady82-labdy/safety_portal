@@ -11,7 +11,7 @@ import 'package:safety_portal/core/logger.dart';
 import 'package:safety_portal/data/repository/i_repo_duplicate_detector.dart';
 
 class RepoDuplicateDetectorWeb with LogMixin implements IRepoDuplicateDetector {
-  TFLiteModel? _model;
+  TFLiteModel? _interpreter;
   Map<String, int>? _vocab;
   bool _isLoaded = false;
   static bool _wasmInitialized = false;
@@ -29,7 +29,7 @@ class RepoDuplicateDetectorWeb with LogMixin implements IRepoDuplicateDetector {
       }
 
       // 1. Load Embedding Model
-      _model = await TFLiteModel.fromUrl('/assets/ai/safety_embedding_model.tflite');
+      _interpreter = await TFLiteModel.fromUrl('assets/assets/ai/safety_embedding_model.tflite');
 
       // 2. Load Vocab
       _vocab = Map<String, int>.from(jsonDecode(await rootBundle.loadString('assets/ai/vocab.json')));
@@ -47,7 +47,7 @@ class RepoDuplicateDetectorWeb with LogMixin implements IRepoDuplicateDetector {
     required String area,
     required String text,
   }) async {
-    if (!_isLoaded || _model == null) await loadModel();
+    if (!_isLoaded || _interpreter == null) await loadModel();
 
     try {
       // 1. Context Injection (Must match Python training logic)
@@ -73,7 +73,7 @@ class RepoDuplicateDetectorWeb with LogMixin implements IRepoDuplicateDetector {
       );
 
       // 3. Pass the TENSOR to the model, not the list
-      final result =_model!.predict<Tensor>(inputTensor);
+      final result =_interpreter!.predict<Tensor>(inputTensor);
 
       final vectorTensor = result;
       List<double> vector = vectorTensor.dataSync<Float32List>().toList();

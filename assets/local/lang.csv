@@ -1,0 +1,95 @@
+key;en;ar
+app_title;HSE-PORTAL;منصة السلامة
+command_center;COMMAND CENTER;مركز القيادة
+collab_intel;COLLABORATIVE INTEL;الذكاء التعاوني
+tab_manager;Manager;المدير
+tab_profile;Profile;الملف
+tab_analytics;Analytics;التحليلات
+tab_forecast;Forecast;التوقعات
+tab_report;Report;تقرير
+kpi_plant_safety;PLANT SAFETY;سلامة المنشأة
+kpi_risks;RISKS MITIGATED;المخاطر التي تم تقليلها
+kpi_streak;ACTIVE STREAK;سلسلة النشاط
+kpi_ai;AI PREDICTION;توقعات الذكاء الاصطناعي
+chart_strategic;Recent Risk Volume;حجم المخاطر الحديثة
+chart_trajectory;Daily Observation Volume;حجم الملاحظات اليومية
+smart_entry;Smart Hazard Entry;إدخال المخاطر الذكي
+describe_hint;Describe the issue...;صف المشكلة أو الملاحظة...
+field_dept;Department;القسم
+field_person;Responsible Person;المسؤل عن التنفيذ
+field_line;Plant Line;خط الإنتاج
+field_area;Area;المنطقة
+quality_meter;AI QUALITY METER;مقياس جودة الذكاء الاصطناعي
+interventions;AI Interventions;تدخلات الذكاء الاصطناعي
+login_btn;Sign In;دخول
+pick_camera;Camera;كاميرا
+pick_gallery;Gallery;معرض
+strength;PRIMARY STRENGTH;نقطة القوة الرئيسية
+opportunity;OPPORTUNITY;فرصة التطوير
+dna_title;Expertise DNA;بصمة الخبرة
+dna_sub;Your proactivity fingerprint by Category;بصمة استباقيتك حسب الفئة
+forecast_title;Area Risk Forecast;توقعات مخاطر المنطقة
+forecast_sub;Predictive analysis for your zone;التحليل التنبؤي لمنطقتك
+confirmText;Confirm;تأكيد
+cancel;Cancel;الغاء
+recent_activity;Recent Activity;النشاط الأخير
+latest_obs;Latest observations;أحدث الملاحظات
+chart_risk_vol;Risk Volume;حجم المخاطر
+chart_risk_vol_sub;Daily observations over the last 7 days;الملاحظات اليومية خلال آخر 7 أيام
+gen;Gen;عام
+risk_cat;Risk Categories;فئات المخاطر
+risk_cat_sub;Distribution by Hazard Type;التوزيع حسب نوع الخطر
+na;N/A;غير متاح
+ai_scanning;AI Scanning...;جاري المسح بالذكاء الاصطناعي...
+report_success;Report Submitted Successfully;تم إرسال التقرير بنجاح
+error_prefix;Error: ;خطأ: 
+review_submit;REVIEW AND SUBMIT;مراجعة وإرسال
+contrib_analysis;CONTRIBUTION ANALYSIS;تحليل المساهمة
+contrib_analysis_sub;Tracking your reporting impact on site intelligence;تتبع تأثير تقاريرك على ذكاء الموقع
+sensors_fed;Sensors Fed;المستشعرات المغذاة
+ai_gain;AI Gain;مكسب الذكاء
+site_rank;Site Rank;تصنيف الموقع
+impact_text;Your data points directly improved the hazard detection accuracy for the Limestone Crusher area by 14% this month.;حسنت نقاط بياناتك دقة اكتشاف المخاطر لمنطقة كسارة الحجر الجيري بنسبة 14٪ هذا الشهر.
+badge_leader;Safety Intelligence Leader;قائد ذكاء السلامة
+badge_leader_desc;Your reports are considered high-trust sensors by the engine.;تعتبر تقاريرك مستشعرات عالية الثقة بواسطة المحرك.
+badge_guard;Predictive Guard;الحارس التنبؤي
+badge_guard_desc;You've reported 4 hazards that the AI later flagged as risk areas.;لقد أبلغت عن 4 مخاطر حددها الذكاء الاصطناعي لاحقًا كمناطق خطر.
+no_data;No Data Available;لا توجد بيانات متاحة
+back;Back;رجوع
+analysis_suffix;ANALYSIS;تحليل
+trajectory_prefix;Trajectory based on;المسار بناءً على
+signals;signals;إشارات
+area_risk_dist;AREA RISK DISTRIBUTION;توزيع مخاطر المنطقة
+area_risk_dist_sub;Projected probability scores;درجات الاحتمال المتوقعة
+scanning_history;Scanning history for trend patterns...;مسح التاريخ بحثًا عن أنماط الاتجاه...
+window;Window;نافذة
+line_hint;Select Line;اختر الخط
+area_hint;Select Area;اختر المنطقة
+dup_title;Confirm Submission;تأكيد الإرسال
+lbl_line;Line;الخط
+lbl_area;Area;المنطقة
+lbl_issue;Issue;المشكلة
+lbl_type;Type;النوع
+lbl_hazard;Hazard;الخطر
+lbl_level;Level;المستوى
+lbl_dept;Department;القسم
+lbl_deptPerson;Responsible;المسؤول
+dashboard_title;Executive Risk Overview;نظرة عامة على المخاطر التنفيذية
+kpi_active_reports;Active Reports;التقارير النشطة
+kpi_risk_velocity;Risk Velocity;سرعة المخاطر
+kpi_high_risk_area;High Risk Area;منطقة عالية المخاطر
+sub_pending_action;Pending Action;بانتظار الإجراء
+sub_ai_history;Based on AI History;بناءً على تاريخ الذكاء الاصطناعي
+sub_ai_identified;AI Identified;تم تحديده بواسطة AI
+chart_velocity;Velocity of Risk;سرعة المخاطر
+chart_velocity_sub;Historical volume trends (AI Analysis);اتجاهات الحجم التاريخية (تحليل AI)
+chart_attention;Attention Map;خريطة الاهتمام
+chart_attention_sub;Risk concentration by Area;تركز المخاطر حسب المنطقة
+watchlist_title;Priority Watchlist;قائمة المراقبة ذات الأولوية
+watchlist_empty;No high-priority threats detected.;لم يتم اكتشاف تهديدات ذات أولوية عالية.
+lbl_rising;Rising;صاعد
+lbl_falling;Falling;هابط
+lbl_stable;Stable;مستقر
+lbl_scanning;Scanning...;جاري المسح...
+lbl_none;None;لا يوجد
+log_new_risk;Log New Risk;تسجيل خطر جديد

@@ -23,7 +23,7 @@ class ModelAtr {
     this.area,
     required this.observation,
     this.action = "",
-    this.status = "Pending",
+    this.status = "awaitingValidation",
     required this.issueDate,
     this.type,
     this.hazardKind,
@@ -105,10 +105,17 @@ class ModelAtr {
   Map<String, dynamic> toRealtimeDatabase() => toMap();
 
   /// Creates an AtrModel instance from a Firebase Realtime Database Map.
-  factory ModelAtr.fromMap(String id, Map<dynamic, dynamic> map) {
+  factory ModelAtr.fromMap(String id, dynamic map) {
+    if (map == null || map is! Map) {
+      return ModelAtr(
+        id: id,
+        observation: "Invalid Data",
+        issueDate: DateTime.now().toIso8601String(),
+      );
+    }
     return ModelAtr(
       id: id,
-      line: map['line'].toString(),
+      line: map['line']?.toString(),
       area: map['area'] as String?,
       observation: map['observationOrIssueOrHazard'] ?? '',
       action: map['actionOrCorrectiveAction'] ?? '',

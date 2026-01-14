@@ -19,8 +19,12 @@ class RepoRealtime implements IRepoRealtime {
 
     // Connect to local emulator if in debug mode
     if (kDebugMode && useEmulator) {
-      // Default Firebase RTDB emulator port is 9000
-      instance.useDatabaseEmulator('localhost', 9000);
+      String host = 'localhost';
+      // Android emulator requires 10.0.2.2 to connect to host machine
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+        host = '10.0.2.2';
+      }
+      instance.useDatabaseEmulator(host, 9000);
     }
 
     return RepoRealtime._(db: instance);

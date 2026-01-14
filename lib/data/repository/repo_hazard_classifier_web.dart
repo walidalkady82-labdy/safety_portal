@@ -5,11 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:safety_portal/core/logger.dart';
 import 'package:tflite_web/tflite_web.dart'; 
 import 'i_repo_hazard_classifier.dart';
-// ignore: avoid_web_libraries_in_flutter
-// import 'dart:js_util' as js_util;
+
 
 class RepoHazardClassifierWeb with LogMixin implements IRepoHazardClassifier {
-  TFLiteModel? _model;
+  TFLiteModel? _interpreter;
   Map<String, int>? _vocab;
   
   // Lists to hold loaded labels for the 6 outputs
@@ -43,7 +42,7 @@ class RepoHazardClassifierWeb with LogMixin implements IRepoHazardClassifier {
       }
       
       // 1. Load Model
-      _model = await TFLiteModel.fromUrl('/assets/ai/safety_classifier_model.tflite');
+      _interpreter = await TFLiteModel.fromUrl('assets/assets/ai/safety_classifier_model.tflite');
       
       // 2. Load Vocab
       _vocab = Map<String, int>.from(jsonDecode(await rootBundle.loadString('assets/ai/vocab.json')));
@@ -78,7 +77,7 @@ class RepoHazardClassifierWeb with LogMixin implements IRepoHazardClassifier {
         type: TFLiteDataType.float32,
       );
 
-      final NamedTensorMap result = _model!.predict<NamedTensorMap>(inputTensor);
+      final NamedTensorMap result = _interpreter!.predict<NamedTensorMap>(inputTensor);
       final outResults =  {
         'type': _getBestLabel(result['StatefulPartitionedCall_1:0'], _typeLabels),
         'hazard': _getBestLabel(result['StatefulPartitionedCall_1:1'], _hazardLabels),
@@ -153,7 +152,7 @@ class RepoHazardClassifierWeb with LogMixin implements IRepoHazardClassifier {
 
     // 2. RUN INFERENCE
     // 'result' here is the "output"
-    final dynamic result = _model!.predict<NamedTensorMap>(inputTensor);
+    final dynamic result = _interpreter!.predict<NamedTensorMap>(inputTensor);
 
     // 3. EXTRACT 'out_action'
     List<double> actionProbs = result['StatefulPartitionedCall_1:4'].dataSync<Float32List>().toList();

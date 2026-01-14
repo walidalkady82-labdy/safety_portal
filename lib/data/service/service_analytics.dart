@@ -1,11 +1,16 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:safety_portal/data/model/model_atr.dart';
+import 'package:safety_portal/data/service/service_atr.dart';
 
+import '../../locator.dart';
 import '../model/model_analitcs_summery.dart';
 import '../model/model_department_metric.dart';
 import '../model/model_risk_metric.dart';
 import '../model/model_user_stats.dart';
 
 class ServiceAnalytics {
+  final _atrService = sl<AtrService>();
+
   // Weights matching the training logic
   final Map<String, int> levelWeights = {'low': 1, 'medium': 3, 'high': 5};
   final Map<String, int> typeWeights = {
@@ -19,21 +24,91 @@ class ServiceAnalytics {
   ModelAnalyticsSummary? _cachedSummary;
   DateTime? _lastFetch;
   final Duration _cacheDuration = const Duration(minutes: 5);
-  
+
   Future<ModelAnalyticsSummary> getUnifiedAnalytics({int? limit}) async {
+    try{
     if (_cachedSummary != null &&
         _lastFetch != null &&
         DateTime.now().difference(_lastFetch!) < _cacheDuration) {
       return _cachedSummary!;
     }
 
-    final rawData = await _fetchRawData(limit);
-    if (rawData.isEmpty) return _emptySummary();
+    // 1. Fetch real data
+       // 1. Fetch real data
+      final reports = await _atrService.getAtrs(limit: limit ?? 100);
 
-    _cachedSummary = _processRawData(rawData);
+      // 2. Process
+      if (reports.isEmpty) {
+        return _emptySummary();
+      }
+
+    _cachedSummary = await _calculateStats(reports);
     _lastFetch = DateTime.now();
     return _cachedSummary!;
+    } catch (e) {
+      print("Analytics Error: $e");
+      return _emptySummary();
+      }
   }
+  
+  Future<ModelAnalyticsSummary> _calculateStats(List<ModelAtr> reports,{int limit = 100}) async {
+    int open = 0;
+    int closed = 0;
+    int critical = 0;
+    Map<String, int> dailyVolume = {};
+    Map<String, int> riskTypes = {};
+
+    for (var r in reports) {
+      // Counts
+      if (r.status.toLowerCase() == 'closed') {
+        closed++;
+      } else {
+        open++;
+      }
+
+      if (r.level?.toLowerCase() == 'high' || r.type == 'FA') {
+        critical++;
+      }
+
+      // Daily Volume (YYYY-MM-DD)
+      if (r.issueDate.isNotEmpty) {
+        // Normalize date if needed (e.g., take first 10 chars)
+        String dateKey = r.issueDate.length >= 10 
+            ? r.issueDate.substring(0, 10) 
+            : r.issueDate;
+        dailyVolume[dateKey] = (dailyVolume[dateKey] ?? 0) + 1;
+      }
+
+      // Risk Types
+      String type = r.type ?? "Unknown";
+      riskTypes[type] = (riskTypes[type] ?? 0) + 1;
+    }
+
+    // Sort Top Risks
+    // (Optional: limit to top 5)
+    
+    // Safety Score (Simple Logic)
+    int total = open + closed;
+    double score = total == 0 ? 100 : (100 - (critical * 5) - (open * 2)).clamp(0, 100).toDouble();
+    final areaRisks = await getAreaRiskMetrics( );
+    final depMetrics =await  getDepartmentMetrics(limit: limit);
+    final leaderboard =await getLeaderboard(limit: limit);
+
+
+    return ModelAnalyticsSummary(
+      plantSafetyScore: score,
+      totalOpenRisks: open,
+      mitigatedRisks: closed,
+      criticalCount: critical,
+      dailyVolume: dailyVolume,
+      topRisks: riskTypes,
+      areaRisks: areaRisks,
+      deptMetrics: depMetrics,
+      leaderboard: leaderboard,
+      totalReports: reports.length,
+      timestamp: DateTime.now(),
+    );
+  }  
 
   Future<List<ModelRiskMetric>> getAreaRiskMetrics({int? limit}) async {
     final rawData = await _fetchRawData(limit);
@@ -54,19 +129,43 @@ class ServiceAnalytics {
     return _processLeaderboard(rawData, count: count);
   }
 
-  ModelAnalyticsSummary _processRawData(Map<dynamic, dynamic> rawData) {
-    final areaRisks = _processAreaRisks(rawData);
-    final deptMetrics = _processDepartmentMetrics(rawData);
-    final leaderboard = _processLeaderboard(rawData);
-
-    return ModelAnalyticsSummary(
-      areaRisks: areaRisks,
-      deptMetrics: deptMetrics,
-      leaderboard: leaderboard,
-      totalReports: rawData.length,
-      timestamp: DateTime.now(),
-    );
+    /// --- 5. AREA SPECIFIC ANALYTICS (NEW) ---
+  Map<String, dynamic> getAreaMetrics(String area, List<ModelAtr> reports) {
+    // Dynamic Status
+    int score = reports.where((x)=> x.area == area).length;
+    String status = 'Critical';
+    if (score < 50) status = 'Stable';
+    if (score >= 50 && score < 80) status = 'Warning';  
+    return {
+      'riskScore':score, 
+      'status': status,
+      'reports': reports
+    };
   }
+
+  /// --- 6. LEADERBOARD ---
+  Future<List<Map<String, dynamic>>> getAreaLeaderboard(String area) async {
+      return [
+        {'name': 'John Doe', 'score': 1540, 'rank': 1},
+        {'name': 'Sarah Smith', 'score': 1200, 'rank': 2},
+        {'name': 'Mike Ross', 'score': 980, 'rank': 3},
+      ];
+    }
+  
+
+  // ModelAnalyticsSummary _processRawData(Map<dynamic, dynamic> rawData) {
+  //   final areaRisks = _processAreaRisks(rawData);
+  //   final deptMetrics = _processDepartmentMetrics(rawData);
+  //   final leaderboard = _processLeaderboard(rawData);
+
+  //   return ModelAnalyticsSummary(
+  //     areaRisks: areaRisks,
+  //     deptMetrics: deptMetrics,
+  //     leaderboard: leaderboard,
+  //     totalReports: rawData.length,
+  //     timestamp: DateTime.now(),
+  //   );
+  // }
 
   List<ModelRiskMetric> _processAreaRisks(Map<dynamic, dynamic> rawData) {
     Map<String, _AreaAggregator> areas = {};
@@ -155,6 +254,12 @@ class ServiceAnalytics {
 
   ModelAnalyticsSummary _emptySummary() {
     return ModelAnalyticsSummary(
+      plantSafetyScore: 0.0,
+      totalOpenRisks: 0,
+      mitigatedRisks: 0,
+      criticalCount: 0,
+      dailyVolume: {},
+      topRisks: {},
       areaRisks: [],
       deptMetrics: [],
       leaderboard: [],
@@ -209,7 +314,6 @@ class ServiceAnalytics {
     
     return (lWeight * tWeight).toDouble();
   }
-  
 }
 
 // Internal helper to keep counts before converting to final classes

@@ -10,7 +10,7 @@ class ServiceStorage with LogMixin{
 
   ServiceStorage(this._repo);
   
-  Future<void> uploadAtrImage(String reportId, XFile selectedImage) async {
+  Future<String> uploadAtrImage(String reportId, XFile selectedImage) async {
       String ref = "";
       try {
           
@@ -20,8 +20,12 @@ class ServiceStorage with LogMixin{
           } else {
               ref = await _repo.uploadFile(path: "atr_photos/${reportId}_${DateTime.now().millisecondsSinceEpoch}.jpg", file: File(selectedImage.path));
           }
-        } catch (e) {
+          logInfo("Image uploaded to $ref");
+          return ref;
+        }
+        catch (e) {
           logError("Image upload to $ref failed: $e");
+          return ref;
           // Depending on requirements, we might want to fail here or continue without image.
           // For now, we continue.
         }

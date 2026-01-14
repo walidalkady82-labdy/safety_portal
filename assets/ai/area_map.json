@@ -1,14 +1,1 @@
-{
-    "Kiln": 0,
-    "Raw Mill": 1,
-    "Cement Mill": 2,
-    "Packing": 3,
-    "Crusher": 4,
-    "Yard": 5,
-    "Quarry": 6,
-    "Workshop": 7,
-    "Lab": 8,
-    "Utility": 9,
-    "CCR": 10,
-    "General": 11
-}
+["1", "1&2", "2", "Admin Building", "Ammonia tank", "Bathrooms", "Bypass", "CCR Building", "Cement mills", "Clay crusher", "Clinic&Ambulance", "Coal mill", "Coal storage", "Containers", "Containers inspection.", "Cooler", "DSS", "Daily mazzot tank", "Diesel Generator", "Electric stations", "Electrical Tunnel", "Electrical workshop", "Emergency doors", "Foma machine", "Fuel station", "Gypsum crusher", "Isolation Room", "Jupiter protection tools", "Labs", "Lifting tools", "Lime stone crusher", "Main mazzot tank", "Mechanical workshop", "Medical Admin", "Mobile Equp.", "Mosque", "Other", "Overhead cranes", "Packing", "Palamatic", "Pre blending area", "Preheater/Kiln", "Quarry", "RDF", "Raw mill", "Safety shower", "Samares Workshop", "Silos", "Site", "Technical Building", "Used oil tanks", "Utilities", "Warehouse", "Water Stations", "co2 tank", "emergency room"]

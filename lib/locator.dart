@@ -11,6 +11,7 @@ import '../data/service/service_analytics.dart';
 // THE MAGIC: This line selects the correct registration file at compile-time.
 // This prevents the Web compiler from ever looking at the Mobile code (and vice versa).
 import 'locator_stub.dart'
+    if (dart.library.js_interop) 'web_locator_config.dart'
     if (dart.library.html) 'web_locator_config.dart'
     if (dart.library.io) 'mobile_locator_config.dart';
 
@@ -25,10 +26,10 @@ Future<void> setupLocator() async {
   registerPlatformRepositories(sl);
 
   // The database Service 
-  sl.registerLazySingleton<IRepoRealtime>(() => RepoRealtime.create());
+  sl.registerLazySingleton<IRepoRealtime>(() => RepoRealtime.create(useEmulator: true));
 
   // The storage Service 
-  sl.registerLazySingleton<IRepoStorage>(() => RepoStorage.create());
+  sl.registerLazySingleton<IRepoStorage>(() => RepoStorage.create(useEmulator: true));
 
   // 2. Register Shared Services
   // We use LazySingletons so they only initialize when first used.

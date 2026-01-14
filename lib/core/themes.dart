@@ -5,7 +5,7 @@ import 'app_typography.dart';
 
 class AppColors {
   static const primary = Color(0xFF6750A4);
-    static const Color secondary = Color(0xFFFFC107);
+  static const Color secondary = Color(0xFFFFC107);
 
   static const personal = Color(0xFF00796B);
   static const surface = Color(0xFFF6F8FA);
@@ -19,11 +19,12 @@ class AppColors {
 
   static const Color error = Color(0xFFD32F2F);
   static const Color success = Color(0xFF388E3C);
-  static const Color textDark = Color(0xFF2D3436);
+  static const Color textPrimary = Color(0xFF2D3436);
   static const Color textLight = Color(0xFF636E72);
 
-  static const Color emeraldColor = Color(0xFF50C878);
-
+  static const Color emerald = Color(0xFF50C878);
+  static const Color emeraldShade50 = Color(0x50C878FF);
+  static const Color emeraldShade800 = Color(0x008000FF);
 }
 
 class AppThemes {

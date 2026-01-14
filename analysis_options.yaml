@@ -23,6 +23,17 @@ linter:
   rules:
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
-
+    
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
+# Highlighting strings that should be localized
+# This flags string interpolations that are unnecessary, 
+    # often a side effect of hard-coding strings.
+# Highlighting strings that should be localized in UI
+# Flags unnecessary interpolations, often a side effect of hard-coding
+    - unnecessary_string_interpolations
+    
+    # Encourages using const for Text widgets. 
+    # If a widget is const, the string must be a literal, making them easier to spot.
+    - prefer_const_constructors
+    - prefer_const_literals_to_create_immutables

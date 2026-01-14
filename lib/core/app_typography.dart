@@ -26,7 +26,7 @@ class AppTypography {
   static const TextStyle headerStyle = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
-    color: AppColors.textDark,
+    color: AppColors.textPrimary,
     letterSpacing: -0.5,
   );
 
@@ -41,7 +41,7 @@ class AppTypography {
   // Body text for general content
   static const TextStyle bodyStyle = TextStyle(
     fontSize: 16,
-    color: AppColors.textDark,
+    color: AppColors.textPrimary,
     height: 1.5,
   );
 

@@ -18,8 +18,12 @@ class RepoStorage implements IRepoStorage{
     
     // Connect to local emulator if in debug mode
     if (kDebugMode && useEmulator) {
-      // Default Firebase emulator port is 9199
-      instance.useStorageEmulator('localhost', 9199);
+      String host = 'localhost';
+      // Android emulator requires 10.0.2.2 to connect to host machine
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+        host = '10.0.2.2';
+      }
+      instance.useStorageEmulator(host, 9199);
     }
 
     return RepoStorage._(storage: instance);
